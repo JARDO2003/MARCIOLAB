@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALLs - Détails des commandes</title>
+    <title>MARCIOLAB - Espace Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
@@ -30,46 +30,34 @@
             --box-shadow: 0 8px 20px rgba(58, 91, 183, 0.12);
             --box-shadow-lg: 0 12px 28px rgba(58, 91, 183, 0.15);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Inter', -apple-system, sans-serif;
         }
 
         body {
-            font-family: var(--font-body);
-            color: var(--text-color);
             background-color: var(--light-bg);
-            line-height: 1.6;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: var(--font-heading);
-            font-weight: 600;
-            line-height: 1.3;
+            color: var(--text-color);
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
-            position: relative;
         }
 
-        .topbar {
-            background-color: white;
-            box-shadow: var(--box-shadow-sm);
-            padding: 12px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        header {
+            background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--box-shadow);
         }
 
-        .topbar-content {
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -79,7 +67,7 @@
             display: flex;
             align-items: center;
             text-decoration: none;
-            color: var(--text-color);
+            color: white;
         }
 
         .brand img {
@@ -92,118 +80,114 @@
         .brand h1 {
             font-size: 1.5rem;
             margin: 0;
-            color: var(--primary-color);
         }
 
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .nav-btn {
-            padding: 8px 16px;
-            background-color: transparent;
-            color: var(--text-color);
-            border: 1px solid var(--mid-gray);
-            border-radius: 30px;
-            font-size: 0.9rem;
+        .admin-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .stats-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        .stats-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--light-gray);
             display: flex;
             align-items: center;
-            text-decoration: none;
         }
 
-        .nav-btn i {
-            margin-right: 6px;
-            font-size: 0.8rem;
+        .stats-title i {
+            margin-right: 10px;
         }
 
-        .nav-btn:hover {
+        .stat-card {
             background-color: var(--light-gray);
-            border-color: var(--text-muted);
-        }
-
-        .nav-btn.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        .order-header {
-            background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 40px 0;
-            position: relative;
-            margin-bottom: 40px;
-            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
-            overflow: hidden;
-        }
-
-        .order-header-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .order-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .order-header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-bottom: 0;
-        }
-
-        .main-content {
-            margin-bottom: 60px;
-        }
-
-        .order-detail {
-            background: white;
             border-radius: var(--border-radius);
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: var(--box-shadow);
-            position: relative;
-        }
-
-        .order-detail::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 6px;
-            height: 100%;
-            background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
-            border-radius: var(--border-radius) 0 0 var(--border-radius);
-        }
-
-        .detail-header {
+            padding: 15px;
+            margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(58, 91, 183, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+
+        .order-list {
+            margin-bottom: 30px;
+        }
+
+        .order-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: var(--box-shadow-sm);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
             padding-bottom: 15px;
             border-bottom: 1px solid var(--light-gray);
         }
 
-        .detail-title {
-            font-size: 1.5rem;
-            color: var(--primary-color);
+        .order-title {
             font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
         }
 
-        .detail-status {
-            padding: 8px 16px;
+        .order-id {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .order-status {
+            padding: 5px 12px;
             border-radius: 30px;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 500;
         }
 
@@ -222,70 +206,55 @@
             color: #05a660;
         }
 
-        .detail-row {
-            display: flex;
-            flex-wrap: wrap;
-            margin-left: -15px;
-            margin-right: -15px;
-        }
-
-        .detail-col {
-            flex: 1;
-            min-width: 250px;
-            padding: 0 15px;
-            margin-bottom: 20px;
-        }
-
-        .detail-item {
-            margin-bottom: 20px;
-        }
-
-        .detail-item-label {
-            font-weight: 500;
-            color: var(--text-muted);
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .detail-item-label i {
-            margin-right: 8px;
-            color: var(--primary-color);
-        }
-
-        .detail-item-value {
-            color: var(--text-color);
-            font-size: 1.05rem;
-            word-break: break-word;
-        }
-
-        .order-actions {
-            margin-top: 20px;
-            display: flex;
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
         }
 
-        .order-btn {
-            padding: 10px 20px;
+        .detail-item {
+            margin-bottom: 5px;
+        }
+
+        .detail-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .btn {
+            padding: 8px 16px;
             border-radius: var(--border-radius);
+            font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
-            text-decoration: none;
-            display: inline-flex;
+            border: none;
+            display: flex;
             align-items: center;
-            font-size: 0.95rem;
+            justify-content: center;
         }
 
-        .order-btn i {
-            margin-right: 8px;
+        .btn i {
+            margin-right: 6px;
         }
 
         .btn-primary {
             background-color: var(--primary-color);
             color: white;
-            border: none;
         }
 
         .btn-primary:hover {
@@ -299,324 +268,143 @@
         }
 
         .btn-outline:hover {
-            background-color: var(--light-gray);
+            background-color: var(--primary-color);
+            color: white;
         }
 
-        .participants-list {
-            list-style: none;
-            padding: 0;
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
         }
 
-        .participants-list li {
-            margin-bottom: 5px;
-            padding-left: 20px;
-            position: relative;
+        .btn-success:hover {
+            background-color: #2a9a83;
         }
 
-        .participants-list li::before {
-            content: '•';
-            color: var(--primary-color);
-            position: absolute;
-            left: 0;
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
         }
 
-        .order-navigation {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            background-color: white;
-            padding: 15px 20px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow-sm);
-        }
-
-        .go-back-btn {
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            transition: var(--transition);
-        }
-
-        .go-back-btn i {
-            margin-right: 8px;
-        }
-
-        .go-back-btn:hover {
-            color: var(--primary-color);
+        .btn-warning:hover {
+            background-color: #c94d5c;
         }
 
         .empty-state {
-            padding: 60px 40px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
             text-align: center;
             color: var(--text-muted);
-            background-color: var(--light-gray);
-            border-radius: var(--border-radius);
-            margin-bottom: 30px;
         }
 
         .empty-state i {
-            font-size: 4rem;
+            font-size: 3rem;
             color: var(--mid-gray);
-            margin-bottom: 20px;
-        }
-
-        .empty-state p {
-            font-size: 1.1rem;
-        }
-
-        .orders-list {
-            margin-top: 30px;
-        }
-
-        .order-card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--box-shadow-sm);
-            transition: var(--transition);
-            border-left: 4px solid var(--primary-color);
-            cursor: pointer;
-        }
-
-        .order-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--box-shadow);
-        }
-
-        .order-card-header {
-            display: flex;
-            justify-content: space-between;
             margin-bottom: 15px;
         }
 
-        .order-card-title {
-            font-weight: 600;
-            color: var(--primary-color);
-            font-size: 1.1rem;
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        .order-card-date {
+        .filter-btn {
+            padding: 8px 16px;
+            background-color: white;
+            border: 1px solid var(--mid-gray);
+            border-radius: 30px;
             font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .order-card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--light-gray);
-        }
-
-        .order-card-price {
-            font-weight: 600;
-            color: var(--text-color);
-        }
-
-        .tab-container {
-            display: flex;
-            margin-bottom: 30px;
-            background-color: white;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--box-shadow-sm);
-        }
-
-        .tab {
-            flex: 1;
-            padding: 16px;
-            text-align: center;
-            background-color: white;
             cursor: pointer;
             transition: var(--transition);
-            font-weight: 500;
-            color: var(--text-muted);
-            border-bottom: 3px solid transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .tab i {
-            margin-right: 8px;
-            font-size: 1.1rem;
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
 
-        .tab.active {
-            background-color: white;
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--primary-color);
-            font-weight: 600;
-        }
-
-        .tab:hover:not(.active) {
+        .filter-btn:hover:not(.active) {
             background-color: var(--light-gray);
         }
 
-        footer {
-            background-color: var(--dark-bg);
-            color: var(--light-text);
-            padding: 20px 0;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        /* Responsive styles */
         @media (max-width: 768px) {
-            .container {
-                padding: 0 15px;
-            }
-
-            .order-header {
-                padding: 30px 0;
-            }
-
-            .order-header h1 {
-                font-size: 2rem;
-            }
-
-            .detail-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            .detail-status {
-                align-self: flex-start;
-            }
-
-            .order-actions {
-                flex-direction: column;
-            }
-
-            .order-btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .nav-buttons {
-                display: none;
+            .dashboard {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="topbar">
+    <header>
         <div class="container">
-            <div class="topbar-content">
-                <a href="index.html" class="brand">
-                    <img src="image/marciolab.jpg" alt="ALLs Logo">
+            <div class="header-content">
+                <a href="#" class="brand">
+                    <img src="image/marciolab.jpg" alt="MARCIOLAB Logo">
                     <h1>MARCIOLAB</h1>
                 </a>
-                <div class="nav-buttons">
-                    <a href="#" class="nav-btn"><i class="fas fa-info-circle"></i> À propos</a>
-                    <a href="#" class="nav-btn"><i class="fas fa-envelope"></i> Contact</a>
-                    <a href="#" class="nav-btn"><i class="fas fa-laptop-code"></i> Maciolab</a>
+                <div class="admin-badge">
+                    <i class="fas fa-shield-alt"></i> Espace Administration
                 </div>
             </div>
         </div>
-    </div>
+    </header>
 
     <div class="container">
-        <div class="order-header">
-            <div class="order-header-content">
-                <h1>Gestion des commandes</h1>
-                <p>Suivez l'état de vos commandes de TPE et consultez leurs détails</p>
-            </div>
-        </div>
-
-        <div class="main-content">
-            <div class="order-navigation">
-                <a href="index.html" class="go-back-btn"><i class="fas fa-arrow-left"></i> Retour à l'accueil</a>
-                <a href="#" class="go-back-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> Actualiser</a>
-            </div>
-
-            <div class="tab-container">
-                <div class="tab active" data-tab="all"><i class="fas fa-th-list"></i> Toutes les commandes</div>
-                <div class="tab" data-tab="pending"><i class="fas fa-clock"></i> En attente</div>
-                <div class="tab" data-tab="progress"><i class="fas fa-spinner"></i> En cours</div>
-                <div class="tab" data-tab="completed"><i class="fas fa-check-circle"></i> Terminées</div>
-            </div>
-
-            <!-- Conteneur pour afficher les détails d'une commande spécifique -->
-            <div id="orderDetailView" class="hidden">
-                <div class="order-detail">
-                    <div class="detail-header">
-                        <h2 class="detail-title" id="orderTheme">Chargement...</h2>
-                        <div class="detail-status status-pending" id="orderStatus">En attente</div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-col">
-                            <div class="detail-item">
-                                <div class="detail-item-label"><i class="fas fa-hashtag"></i> ID de commande</div>
-                                <div class="detail-item-value" id="orderId">--</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-item-label"><i class="fas fa-chalkboard-teacher"></i> Professeur</div>
-                                <div class="detail-item-value" id="orderTeacher">--</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-item-label"><i class="fas fa-users"></i> Participants</div>
-                                <div class="detail-item-value">
-                                    <ul class="participants-list" id="orderParticipants">
-                                        <!-- Liste des participants -->
-                                    </ul>
-                                </div>
-                            </div>
+        <div class="dashboard">
+            <div>
+                <div class="stats-container">
+                    <h2 class="stats-title"><i class="fas fa-chart-pie"></i> Statistiques</h2>
+                    <div class="stat-card">
+                        <div>
+                            <div class="stat-value" id="totalOrders">0</div>
+                            <div class="stat-label">Commandes totales</div>
                         </div>
-                        <div class="detail-col">
-                            <div class="detail-item">
-                                <div class="detail-item-label"><i class="fas fa-file-alt"></i> Nombre de pages</div>
-                                <div class="detail-item-value" id="orderPageCount">--</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-item-label"><i class="fas fa-tag"></i> Prix</div>
-                                <div class="detail-item-value" id="orderPrice">--</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-item-label"><i class="fas fa-calendar-alt"></i> Date de commande</div>
-                                <div class="detail-item-value" id="orderDate">--</div>
-                            </div>
-                        </div>
-                        <div class="detail-col">
-                            <div class="detail-item">
-                                <div class="detail-item-label"><i class="fas fa-truck"></i> Mode de livraison</div>
-                                <div class="detail-item-value" id="orderDeliveryMethod">--</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-item-label"><i class="fas fa-exchange-alt"></i> Contact</div>
-                                <div class="detail-item-value" id="orderDeliveryContact">--</div>
-                            </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
                         </div>
                     </div>
-                    <div class="order-actions">
-                        <button class="order-btn btn-primary" id="backToListBtn"><i class="fas fa-arrow-left"></i> Retour à la liste</button>
+                    <div class="stat-card">
+                        <div>
+                            <div class="stat-value" id="pendingOrders">0</div>
+                            <div class="stat-label">En attente</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div>
+                            <div class="stat-value" id="completedOrders">0</div>
+                            <div class="stat-label">Terminées</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Conteneur pour la liste des commandes -->
-            <div id="ordersListView">
-                <div id="emptyState" class="empty-state hidden">
-                    <i class="fas fa-folder-open"></i>
-                    <p>Aucune commande trouvée</p>
+            <div>
+                <div class="filter-bar">
+                    <button class="filter-btn active" data-filter="all">Toutes</button>
+                    <button class="filter-btn" data-filter="pending">En attente</button>
+                    <button class="filter-btn" data-filter="progress">En cours</button>
+                    <button class="filter-btn" data-filter="completed">Terminées</button>
                 </div>
-                <div id="ordersList" class="orders-list">
+
+                <div class="order-list" id="ordersList">
                     <!-- Les commandes seront chargées ici dynamiquement -->
+                    <div class="empty-state" id="emptyState">
+                        <i class="fas fa-folder-open"></i>
+                        <p>Aucune commande trouvée</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 ALLs - Tous droits réservés</p>
-        </div>
-    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -635,388 +423,259 @@
             // Initialisation Firebase
             firebase.initializeApp(firebaseConfig);
             const database = firebase.database();
-
-            // Variables globales
-            let currentUserId = localStorage.getItem('userId');
-            let currentTab = 'all';
-            let allOrders = [];
-
-            // Vérification si l'utilisateur est connecté
-            if (!currentUserId) {
-                window.location.href = 'index.html';
-                return;
-            }
-
-            // Récupération des paramètres de l'URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const orderId = urlParams.get('orderId');
             
-            // Si un ID de commande est présent dans l'URL, afficher les détails de cette commande
-            if (orderId) {
-                loadOrderDetails(orderId);
-            } else {
-                // Sinon, charger la liste des commandes
-                loadOrders();
+            // Vérifier si on a des paramètres d'URL pour une nouvelle commande
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Si on a un ID de commande dans l'URL, on récupère les détails
+            if(urlParams.has('orderId')) {
+                const orderId = urlParams.get('orderId');
+                const orderData = {
+                    theme: urlParams.get('theme') || '',
+                    teacher: urlParams.get('teacher') || '',
+                    participants: urlParams.get('participants') || '',
+                    pageCount: urlParams.get('pageCount') || '',
+                    price: urlParams.get('price') || '',
+                    status: urlParams.get('status') || 'En attente',
+                    userId: urlParams.get('userId') || '',
+                    deliveryMethod: urlParams.get('deliveryMethod') || '',
+                    deliveryContact: urlParams.get('deliveryContact') || '',
+                    createdAt: Date.now()
+                };
+                
+                // Stocker l'ID de commande et les données dans le localStorage
+                saveOrderToLocalStorage(orderId, orderData);
             }
-
-            // Gestion des onglets
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabName = tab.getAttribute('data-tab');
-                    switchTab(tabName);
+            
+            // Chargement des commandes depuis localStorage et Firebase
+            loadAllOrders();
+            
+            // Ajout des écouteurs pour les filtres
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Retirer la classe active de tous les boutons
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    // Ajouter la classe active au bouton cliqué
+                    this.classList.add('active');
+                    // Appliquer le filtre
+                    const filterValue = this.getAttribute('data-filter');
+                    filterOrders(filterValue);
                 });
             });
-
-            // Bouton de retour à la liste
-            document.getElementById('backToListBtn').addEventListener('click', function() {
-                document.getElementById('orderDetailView').classList.add('hidden');
-                document.getElementById('ordersListView').classList.remove('hidden');
-                // Nettoyer l'URL
-                history.pushState({}, document.title, window.location.pathname);
-            });
-
-            // Bouton d'actualisation
-            document.getElementById('refreshBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                if (document.getElementById('orderDetailView').classList.contains('hidden')) {
-                    loadOrders();
-                } else {
-                    const currentOrderId = document.getElementById('orderId').textContent;
-                    if (currentOrderId && currentOrderId !== '--') {
-                        loadOrderDetails(currentOrderId);
-                    }
-                }
-            });
-
-            // Chargement des commandes
-            function loadOrders() {
-                if (!currentUserId) return;
-
-                const ordersRef = database.ref('orders');
-                ordersRef.orderByChild('userId').equalTo(currentUserId).once('value')
-                    .then(snapshot => {
-                        allOrders = [];
-                        if (snapshot.exists()) {
-                            snapshot.forEach(childSnapshot => {
-                                const order = childSnapshot.val();
-                                order.id = childSnapshot.key;
-                                allOrders.push(order);
-                            });
-                            
-                            // Tri par date (plus récent en premier)
-                            allOrders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-                            
-                            // Afficher les commandes selon l'onglet actif
-                            filterOrders(currentTab);
-                        } else {
-                            showEmptyState();
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Erreur lors du chargement des commandes:", error);
-                        showEmptyState();
-                    });
+            
+            // Fonction pour sauvegarder une commande dans le localStorage
+            function saveOrderToLocalStorage(orderId, orderData) {
+                // Récupérer les commandes existantes
+                let orders = JSON.parse(localStorage.getItem('marciolabOrders')) || {};
+                // Ajouter la nouvelle commande
+                orders[orderId] = orderData;
+                // Sauvegarder dans le localStorage
+                localStorage.setItem('marciolabOrders', JSON.stringify(orders));
             }
-
-            // Filtrer les commandes selon l'onglet
-            function filterOrders(tab) {
-                let filteredOrders = [];
+            
+            // Fonction pour charger toutes les commandes
+            function loadAllOrders() {
+                // Récupérer les commandes du localStorage
+                const localOrders = JSON.parse(localStorage.getItem('marciolabOrders')) || {};
                 
-                switch(tab) {
-                    case 'pending':
-                        filteredOrders = allOrders.filter(order => order.status === 'En attente');
-                        break;
-                    case 'progress':
-                        filteredOrders = allOrders.filter(order => order.status === 'En cours');
-                        break;
-                    case 'completed':
-                        filteredOrders = allOrders.filter(order => order.status === 'Terminé');
-                        break;
-                    default:
-                        filteredOrders = allOrders;
-                }
-                
-                // Afficher les commandes filtrées
-                displayOrders(filteredOrders);
-            }
-
-            // Afficher les commandes dans la liste
-            function displayOrders(orders) {
+                // Préparer le conteneur
                 const ordersList = document.getElementById('ordersList');
                 ordersList.innerHTML = '';
                 
-                if (orders.length === 0) {
-                    showEmptyState();
-                    return;
+                // Statistiques
+                let totalOrders = 0;
+                let pendingOrders = 0;
+                let completedOrders = 0;
+                
+                // Vérifier si on a des commandes
+                if (Object.keys(localOrders).length > 0) {
+                    document.getElementById('emptyState').style.display = 'none';
+                    
+                    // Boucler sur les commandes
+                    for (const [orderId, order] of Object.entries(localOrders)) {
+                        totalOrders++;
+                        
+                        if (order.status === 'En attente') {
+                            pendingOrders++;
+                        } else if (order.status === 'Terminé') {
+                            completedOrders++;
+                        }
+                        
+                        // Créer une carte pour chaque commande
+                        const orderCard = createOrderCard(orderId, order);
+                        ordersList.appendChild(orderCard);
+                    }
+                } else {
+                    document.getElementById('emptyState').style.display = 'block';
                 }
                 
-                hideEmptyState();
+                // Mettre à jour les statistiques
+                document.getElementById('totalOrders').textContent = totalOrders;
+                document.getElementById('pendingOrders').textContent = pendingOrders;
+                document.getElementById('completedOrders').textContent = completedOrders;
                 
-                orders.forEach(order => {
-                    const orderCard = createOrderCard(order);
-                    ordersList.appendChild(orderCard);
-                });
+                // Charger aussi depuis Firebase (si disponible)
+                database.ref('orders').once('value')
+                    .then(snapshot => {
+                        if (snapshot.exists()) {
+                            snapshot.forEach(childSnapshot => {
+                                const orderId = childSnapshot.key;
+                                const order = childSnapshot.val();
+                                
+                                // Vérifier si cette commande n'est pas déjà dans le localStorage
+                                if (!localOrders[orderId]) {
+                                    totalOrders++;
+                                    
+                                    if (order.status === 'En attente') {
+                                        pendingOrders++;
+                                    } else if (order.status === 'Terminé') {
+                                        completedOrders++;
+                                    }
+                                    
+                                    // Créer une carte pour la commande
+                                    const orderCard = createOrderCard(orderId, order);
+                                    ordersList.appendChild(orderCard);
+                                    
+                                    // Cacher l'état vide
+                                    document.getElementById('emptyState').style.display = 'none';
+                                }
+                            });
+                            
+                            // Mettre à jour les statistiques
+                            document.getElementById('totalOrders').textContent = totalOrders;
+                            document.getElementById('pendingOrders').textContent = pendingOrders;
+                            document.getElementById('completedOrders').textContent = completedOrders;
+                        }
+                    });
             }
-
-            // Créer une carte de commande pour l'affichage dans la liste
-            function createOrderCard(order) {
+            
+            // Fonction pour créer une carte de commande
+            function createOrderCard(orderId, order) {
                 const card = document.createElement('div');
                 card.className = 'order-card';
-                card.setAttribute('data-id', order.id);
+                card.setAttribute('data-status', order.status.toLowerCase().replace(' ', '-'));
                 
-                // Formatter la date
-                const orderDate = order.createdAt 
-                    ? new Date(order.createdAt).toLocaleDateString('fr-FR') 
-                    : 'Date inconnue';
+                // Déterminer la classe de statut
+                let statusClass = '';
+                switch (order.status) {
+                    case 'En attente':
+                        statusClass = 'status-pending';
+                        break;
+                    case 'En cours':
+                        statusClass = 'status-progress';
+                        break;
+                    case 'Terminé':
+                        statusClass = 'status-completed';
+                        break;
+                }
+                
+                // Formatage de la date
+                const orderDate = order.createdAt ? new Date(order.createdAt).toLocaleDateString('fr-FR') : 'Date inconnue';
                 
                 card.innerHTML = `
-                    <div class="order-card-header">
-                        <div class="order-card-title">${order.theme || 'Sans titre'}</div>
-                        <div class="order-card-date">${orderDate}</div>
+                    <div class="order-header">
+                        <div>
+                            <div class="order-title">${order.theme}</div>
+                            <div class="order-id">ID: ${orderId}</div>
+                        </div>
+                        <div class="order-status ${statusClass}">${order.status}</div>
                     </div>
-                    <div class="order-card-content">
-                        <div>Professeur: ${order.teacher || '--'}</div>
-                        <div>Pages: ${order.pageCount || '--'}</div>
+                    <div class="order-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Professeur & Etablissement</div>
+                            <div class="detail-value">${order.teacher}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Nombre de pages</div>
+                            <div class="detail-value">${order.pageCount}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Prix</div>
+                            <div class="detail-value">${order.price}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Date</div>
+                            <div class="detail-value">${orderDate}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Méthode de livraison</div>
+                            <div class="detail-value">${order.deliveryMethod === 'whatsapp' ? 'WhatsApp' : 'Email'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Contact</div>
+                            <div class="detail-value">${order.deliveryContact}</div>
+                        </div>
                     </div>
-                    <div class="order-card-footer">
-                        <div class="order-card-price">${order.price || '--'}</div>
-                        <div class="detail-status ${getStatusClass(order.status)}">${order.status || 'En attente'}</div>
+                    <div class="order-actions">
+                        <button class="btn btn-primary" onclick="updateStatus('${orderId}', 'En cours')">
+                            <i class="fas fa-play"></i> Démarrer
+                        </button>
+                        <button class="btn btn-success" onclick="updateStatus('${orderId}', 'Terminé')">
+                            <i class="fas fa-check"></i> Terminer
+                        </button>
+                        <button class="btn btn-warning" onclick="deleteOrder('${orderId}')">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
                     </div>
                 `;
                 
-                // Ajouter un événement de clic pour afficher les détails
-                card.addEventListener('click', () => {
-                    loadOrderDetails(order.id);
-                });
-                
                 return card;
             }
-
-            // Obtenir la classe CSS pour le statut
-            function getStatusClass(status) {
-                switch(status) {
-                    case 'En cours': return 'status-progress';
-                    case 'Terminé': return 'status-completed';
-                    default: return 'status-pending';
+            
+            // Fonction pour filtrer les commandes
+            window.filterOrders = function(status) {
+                const orderCards = document.querySelectorAll('.order-card');
+                
+                orderCards.forEach(card => {
+                    if (status === 'all') {
+                        card.style.display = 'block';
+                    } else {
+                        const cardStatus = card.getAttribute('data-status');
+                        card.style.display = cardStatus === status ? 'block' : 'none';
+                    }
+                });
+            };
+            
+            // Fonction pour mettre à jour le statut d'une commande
+            window.updateStatus = function(orderId, newStatus) {
+                // Mettre à jour dans le localStorage
+                const orders = JSON.parse(localStorage.getItem('marciolabOrders')) || {};
+                if (orders[orderId]) {
+                    orders[orderId].status = newStatus;
+                    localStorage.setItem('marciolabOrders', JSON.stringify(orders));
                 }
-            }
-
-            // Charger les détails d'une commande
-            function loadOrderDetails(orderId) {
-                database.ref('orders/' + orderId).once('value')
-                    .then(snapshot => {
-                        if (snapshot.exists()) {
-                            const order = snapshot.val();
-                            order.id = snapshot.key;
-                            
-                            // Afficher les détails de la commande
-                            displayOrderDetails(order);
-                            
-                            // Ajouter l'ID à l'URL pour permettre le partage direct
-                            history.pushState({}, document.title, `${window.location.pathname}?orderId=${orderId}`);
-                        } else {
-                            alert('Commande non trouvée');
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Erreur lors du chargement des détails:", error);
-                        alert('Erreur lors du chargement des détails de la commande');
+                
+                // Mettre à jour dans Firebase
+                database.ref('orders/' + orderId).update({
+                    status: newStatus
+                }).catch(error => {
+                    console.error("Erreur lors de la mise à jour dans Firebase: ", error);
+                });
+                
+                // Recharger la page pour refléter les changements
+                loadAllOrders();
+            };
+            
+            // Fonction pour supprimer une commande
+            window.deleteOrder = function(orderId) {
+                if (confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')) {
+                    // Supprimer du localStorage
+                    const orders = JSON.parse(localStorage.getItem('marciolabOrders')) || {};
+                    if (orders[orderId]) {
+                        delete orders[orderId];
+                        localStorage.setItem('marciolabOrders', JSON.stringify(orders));
+                    }
+                    
+                    // Supprimer de Firebase
+                    database.ref('orders/' + orderId).remove().catch(error => {
+                        console.error("Erreur lors de la suppression dans Firebase: ", error);
                     });
-            }
-
-            // Afficher les détails d'une commande
-            function displayOrderDetails(order) {
-                document.getElementById('orderTheme').textContent = order.theme || 'Sans titre';
-                document.getElementById('orderId').textContent = order.id;
-                document.getElementById('orderTeacher').textContent = order.teacher || '--';
-                document.getElementById('orderPageCount').textContent = order.pageCount || '--';
-                document.getElementById('orderPrice').textContent = order.price || '--';
-                document.getElementById('orderDeliveryMethod').textContent = (order.deliveryMethod === 'whatsapp') ? 'WhatsApp' : 'Email';
-                document.getElementById('orderDeliveryContact').textContent = order.deliveryContact || '--';
-                
-                // Formater et afficher la date
-                const orderDate = order.createdAt 
-                    ? new Date(order.createdAt).toLocaleDateString('fr-FR', { 
-                        day: 'numeric', 
-                        month: 'long', 
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    })
-                    : 'Date inconnue';
-                document.getElementById('orderDate').textContent = orderDate;
-                
-                // Afficher le statut avec la classe CSS appropriée
-                const statusElement = document.getElementById('orderStatus');
-                statusElement.textContent = order.status || 'En attente';
-                statusElement.className = `detail-status ${getStatusClass(order.status)}`;
-                
-                // Afficher les participants
-                const participantsList = document.getElementById('orderParticipants');
-                participantsList.innerHTML = '';
-                
-                if (order.participants) {
-    const participants = order.participants.split('\n');
-    participants.forEach(participant => {
-        if (participant.trim()) {
-            const li = document.createElement('li');
-            li.textContent = participant.trim();
-            participantsList.appendChild(li);
-        }
-    });
-} else {
-    const li = document.createElement('li');
-    li.textContent = 'Aucun participant';
-    participantsList.appendChild(li);
-}
-
-// Afficher la vue détaillée et masquer la liste
-document.getElementById('orderDetailView').classList.remove('hidden');
-document.getElementById('ordersListView').classList.add('hidden');
-}
-
-            // Changer d'onglet
-            function switchTab(tab) {
-                // Mettre à jour l'onglet actif dans l'interface
-                document.querySelectorAll('.tab').forEach(t => {
-                    t.classList.remove('active');
-                });
-                document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
-                
-                // Mettre à jour l'onglet actuel et filtrer les commandes
-                currentTab = tab;
-                filterOrders(tab);
-            }
-
-            // Afficher l'état vide (aucune commande)
-            function showEmptyState() {
-                document.getElementById('emptyState').classList.remove('hidden');
-                document.getElementById('ordersList').classList.add('hidden');
-            }
-
-            // Masquer l'état vide
-            function hideEmptyState() {
-                document.getElementById('emptyState').classList.add('hidden');
-                document.getElementById('ordersList').classList.remove('hidden');
-            }
-
-            // Fonction utilitaire pour formater les dates
-            function formatDate(timestamp) {
-                if (!timestamp) return 'Date inconnue';
-                
-                const date = new Date(timestamp);
-                const options = { 
-                    day: 'numeric', 
-                    month: 'long', 
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                };
-                
-                return date.toLocaleDateString('fr-FR', options);
-            }
-
-            // Fonction pour déconnexion
-            function logout() {
-                localStorage.removeItem('userId');
-                localStorage.removeItem('userEmail');
-                window.location.href = 'index.html';
-            }
-
-            // Écouteur d'événements en temps réel pour les mises à jour des commandes
-            function setupRealtimeUpdates() {
-                if (!currentUserId) return;
-                
-                const ordersRef = database.ref('orders');
-                ordersRef.orderByChild('userId').equalTo(currentUserId).on('child_changed', snapshot => {
-                    const updatedOrder = snapshot.val();
-                    updatedOrder.id = snapshot.key;
                     
-                    // Mettre à jour la commande dans notre tableau local
-                    const index = allOrders.findIndex(order => order.id === updatedOrder.id);
-                    if (index !== -1) {
-                        allOrders[index] = updatedOrder;
-                        
-                        // Si on est actuellement sur la vue détaillée de cette commande, mettre à jour l'affichage
-                        const currentOrderId = document.getElementById('orderId').textContent;
-                        if (!document.getElementById('orderDetailView').classList.contains('hidden') && 
-                            currentOrderId === updatedOrder.id) {
-                            displayOrderDetails(updatedOrder);
-                        }
-                        
-                        // Mettre à jour la liste des commandes
-                        filterOrders(currentTab);
-                    }
-                });
-                
-                // Écouter les nouvelles commandes
-                ordersRef.orderByChild('userId').equalTo(currentUserId).on('child_added', snapshot => {
-                    const newOrder = snapshot.val();
-                    newOrder.id = snapshot.key;
-                    
-                    // Vérifier si cette commande existe déjà dans notre tableau
-                    const exists = allOrders.some(order => order.id === newOrder.id);
-                    if (!exists) {
-                        allOrders.push(newOrder);
-                        // Tri par date (plus récent en premier)
-                        allOrders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-                        // Mettre à jour la liste des commandes
-                        filterOrders(currentTab);
-                    }
-                });
-                
-                // Écouter les suppressions de commandes
-                ordersRef.orderByChild('userId').equalTo(currentUserId).on('child_removed', snapshot => {
-                    const removedOrderId = snapshot.key;
-                    
-                    // Retirer la commande de notre tableau local
-                    allOrders = allOrders.filter(order => order.id !== removedOrderId);
-                    
-                    // Si on est sur la vue détaillée de cette commande, revenir à la liste
-                    const currentOrderId = document.getElementById('orderId').textContent;
-                    if (!document.getElementById('orderDetailView').classList.contains('hidden') && 
-                        currentOrderId === removedOrderId) {
-                        document.getElementById('orderDetailView').classList.add('hidden');
-                        document.getElementById('ordersListView').classList.remove('hidden');
-                        history.pushState({}, document.title, window.location.pathname);
-                    }
-                    
-                    // Mettre à jour la liste des commandes
-                    filterOrders(currentTab);
-                });
-            }
-
-            // Ajout d'un bouton de déconnexion dans la navigation
-            function addLogoutButton() {
-                const navButtons = document.querySelector('.nav-buttons');
-                const logoutBtn = document.createElement('a');
-                logoutBtn.href = '#';
-                logoutBtn.className = 'nav-btn';
-                logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Déconnexion';
-                logoutBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    logout();
-                });
-                navButtons.appendChild(logoutBtn);
-            }
-
-            // Initialisation de l'application
-            function init() {
-                addLogoutButton();
-                setupRealtimeUpdates();
-                
-                // Si un ID de commande est présent dans l'URL, afficher les détails de cette commande
-                if (orderId) {
-                    loadOrderDetails(orderId);
-                } else {
-                    // Sinon, charger toutes les commandes
-                    loadOrders();
+                    // Recharger la page pour refléter les changements
+                    loadAllOrders();
                 }
-            }
-
-            // Démarrer l'application
-            init();
+            };
         });
     </script>
 </body>
