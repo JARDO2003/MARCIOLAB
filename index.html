@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALLs - Aide aux TPE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <style>
+        :root {
+            --primary-color: #3a5bb7;
+            --primary-dark: #2a4494;
+            --primary-light: #5c7bd3;
+            --secondary-color: #4f67c1;
+            --accent-color: #3d84de;
+            --success-color: #34b197;
+            --warning-color: #e05f6e;
+            --light-bg: #f8f9fd;
+            --light-gray: #f1f3f9;
+            --mid-gray: #e0e5f2;
+            --dark-bg: #1a2130;
+            --text-color: #364156;
+            --text-muted: #67758d;
+            --light-text: #f8faff;
+            --border-radius-sm: 6px;
+            --border-radius: 10px;
+            --border-radius-lg: 16px;
+            --box-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --box-shadow: 0 8px 20px rgba(58, 91, 183, 0.12);
+            --box-shadow-lg: 0 12px 28px rgba(58, 91, 183, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+      margin: 0;
+      padding: 0;
+      background-image: url('image/marciolab.jpg'); /* Remplace par le chemin de ton image */
+      background-size: cover;       /* Pour que l'image couvre tout l'écran */
+      background-position: center;  /* Centre l'image */
+      background-repeat: no-repeat; /* Empêche la répétition de l'image */
+      height: 100vh;
+    }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .topbar {
+            background-color: white;
+            box-shadow: var(--box-shadow-sm);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .brand img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 8px;
+        }
+
+        .brand h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--mid-gray);
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .nav-btn i {
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--light-gray);
+            border-color: var(--text-muted);
+        }
+
+        .nav-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .nav-btn.active:hover {
+            background-color: var(--primary-dark);
+        }
+
+        header {
+            background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 60px 0 100px;
+            position: relative;
+            margin-bottom: 80px;
+            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background-color: var(--light-bg);
+            transform: skewY(-3deg);
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+            background-color: white;
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .logo h1 {
+            font-size: 2.8rem;
+            margin: 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 5px;
+            font-weight: 300;
+        }
+
+        .form-container {
+            background: white;
+            padding: 35px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+        }
+
+        .form-container h2 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .form-container h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+
+        label i {
+            color: var(--primary-color);
+            margin-right: 8px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--mid-gray);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-family: inherit;
+            color: var(--text-color);
+            background-color: var(--light-gray);
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(61, 132, 222, 0.2);
+            background-color: white;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        button i {
+            margin-right: 8px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 24px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+        }
+
+        .btn-secondary {
+            background-color: var(--accent-color);
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            background-color: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            color: var(--text-muted);
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tab i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .tab.active {
+            background-color: white;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            font-weight: 600;
+        }
+
+        .tab:hover:not(.active) {
+            background-color: var(--light-gray);
+        }
+
+        .tab-content {
+            background: white;
+            padding: 35px;
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .tab-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .tab-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .command-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--box-shadow-sm);
+            transition: var(--transition);
+            border: 1px solid var(--light-gray);
+        }
+
+        .command-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .command-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .command-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .command-status {
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: #fff8e6;
+            color: #b78105;
+        }
+
+        .status-progress {
+            background-color: #e6f4ff;
+            color: #0771c2;
+        }
+
+        .status-completed {
+            background-color: #e6fff0;
+            color: #05a660;
+        }
+
+        .command-details {
+            margin-top: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            min-width: 140px;
+            color: var(--text-muted);
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            padding: 60px 40px;
+            border-radius: var(--border-radius-lg);
+            color: white;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--box-shadow-lg);
+        }
+
+        .welcome-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-banner p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,192L48,197.3C96,203,192,213,288,234.7C384,256,480,288,576,277.3C672,267,768,213,864,202.7C960,192,1056,224,1152,218.7C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            opacity: 0.2;
+        }
+
+        .feature {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-sm);
+            transition: var(--transition);
+            border: 1px solid var(--light-gray);
+        }
+
+        .feature:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .feature-icon {
+            font-size: 1.8rem;
+            padding: 18px;
+            border-radius: 16px;
+            background-color: rgba(58, 91, 183, 0.1);
+            color: var(--primary-color);
+            margin-right: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+
+        .feature-content p {
+            color: var(--text-muted);
+            margin-bottom: 0;
+        }
+
+        footer {
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 20px;
+            padding-right: 20px;
+        }
+
+        .footer-column h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+
+        .footer-column p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-column ul li a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-column ul li a i {
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+
+        .footer-column ul li a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-icon:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .empty-state {
+            padding: 60px 40px;
+            text-align: center;
+            color: var(--text-muted);
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--mid-gray);
+            margin-bottom: 20px;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            header {
+                padding: 40px 0 80px;
+            }
+
+            .logo h1 {
+                font-size: 2.2rem;
+            }
+
+            .welcome-banner {
+                padding: 40px 20px;
+            }
+
+            .welcome-banner h1 {
+                font-size: 2rem;
+            }
+
+            .form-container, .tab-content {
+                padding: 25px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .feature {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .feature-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .tab {
+                padding: 12px 8px;
+                font-size: 0.85rem;
+            }
+            
+            .tab i {
+                margin-right: 5px;
+            }
+            
+            .nav-buttons {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+        
+        /* Desktop-only menu */
+        @media (max-width: 992px) {
+            .nav-buttons {
+                gap: 8px;
+            }
+            
+            .nav-btn {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="container">
+            <div class="topbar-content">
+                <a href="#" class="brand">
+                    <img src="image/marciolab.jpg" alt="ALLs Logo">
+                    <h1>MARCIOLAB</h1>
+                </a>
+                <div class="nav-buttons">
+                    <a href="#" class="nav-btn"><i class="fas fa-envelope"></i> A propos</a>
+                    <a href="#" class="nav-btn"><i class="fas fa-envelope"></i> Contact</a>
+                    <a href="#" onclick="if(prompt('Entrez le mot de passe:')==='marcio123456')window.location='inside.html'"><i class="fas fa-info-circle"></i> À propos</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <img src="image/marciolab.jpg" alt="ALLs Logo">
+                    <h1>MARCIOLAB</h1>
+                </div>
+                <p>Service professionnel d'aide pour vos TPE</p>
+            </div>
+        </header>
+
+        <!-- Formulaire d'inscription -->
+        <div id="registerForm" class="form-container">
+            <h2>Inscription</h2>
+            <div class="form-group">
+                <label for="lastName"><i class="fas fa-user"></i> Nom</label>
+                <input type="text" id="lastName" placeholder="Votre nom" required>
+            </div>
+            <div class="form-group">
+                <label for="firstName"><i class="fas fa-user"></i> Prénom</label>
+                <input type="text" id="firstName" placeholder="Votre prénom" required>
+            </div>
+            <div class="form-group">
+                <label for="userType"><i class="fas fa-graduation-cap"></i> Vous êtes</label>
+                <select id="userType" required>
+                    <option value="">--Sélectionnez--</option>
+                    <option value="student">Étudiant</option>
+                    <option value="pupil">Élève</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="contact"><i class="fas fa-phone"></i> Contact</label>
+                <input type="text" id="contact" placeholder="Votre numéro ou email" required>
+            </div>
+            <button id="registerBtn"><i class="fas fa-user-plus"></i> S'inscrire</button>
+        </div>
+
+        <!-- Page d'accueil -->
+        <div id="homePage" class="hidden">
+            <div class="welcome-banner">
+                <h1>Bienvenue sur MARCIOLAB</h1>
+                <p>Votre partenaire pour l'excellence académique. Nous vous aidons à réaliser des TPE de qualité qui répondent aux exigences de vos professeurs.</p>
+                <div class="wave"></div>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab active" data-tab="home"><i class="fas fa-home"></i> Accueil</div>
+                <div class="tab" data-tab="order"><i class="fas fa-file-alt"></i> Commander</div>
+                <div class="tab" data-tab="my-orders"><i class="fas fa-list"></i> Mes commandes</div>
+            </div>
+
+            <div id="homeTab" class="tab-content">
+                <h2>Nos services</h2>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Travaux Personnels Encadrés (TPE)</h3>
+                        <p>Nous réalisons des TPE de qualité dans toutes les matières, adaptés à vos besoins spécifiques.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Qualité garantie</h3>
+                        <p>Tous nos travaux sont rédigés par des experts pour assurer l'excellence académique.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Respect des délais</h3>
+                        <p>Nous nous engageons à livrer votre TPE dans les délais convenus.</p>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button id="homeOrderBtn" class="btn-primary"><i class="fas fa-plus-circle"></i> Commander maintenant</button>
+                </div>
+            </div>
+
+            <!-- Formulaire de commande -->
+            <div id="orderTab" class="tab-content hidden">
+                <h2>Commander un TPE</h2>
+                <div class="form-group">
+                    <label for="theme"><i class="fas fa-bookmark"></i> Thème du TPE</label>
+                    <input type="text" id="theme" placeholder="Ex: Le changement climatique" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacher"><i class="fas fa-chalkboard-teacher"></i> Nom du professeur et de L'Etablissement</label>
+                    <input type="text" id="teacher" placeholder="Ex: Prof:M. Dupont Etabl: Dercade" required>
+                </div>
+                <div class="form-group">
+                    <label for="participants"><i class="fas fa-users"></i> Noms des participants</label>
+                    <textarea id="participants" placeholder="Un nom par ligne" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="pageCount"><i class="fas fa-file-alt"></i> Nombre de pages</label>
+                    <input type="number" id="pageCount" min="10" max="40" value="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="deliveryMethod"><i class="fas fa-truck"></i> Mode de livraison</label>
+                    <select id="deliveryMethod" class="form-control" required>
+                        <option value="">Sélectionnez un mode de livraison</option>
+                        <option value="whatsapp">WhatsApp</option>
+                        <option value="email">Email</option>
+                    </select>
+                </div>
+                <div id="deliveryContactField" class="form-group hidden">
+                    <label for="deliveryContact"><i class="fas fa-exchange-alt"></i> Coordonnées de livraison</label>
+                    <input type="text" id="deliveryContact" class="form-control" placeholder="Coordonnées de livraison" required>
+                </div>
+                <div class="form-group">
+                    <label for="price"><i class="fas fa-tag"></i> Prix</label>
+                    <input type="text" id="price" value="500 FCFA" readonly>
+                </div>
+                <button id="submitOrderBtn"><i class="fas fa-paper-plane"></i> Valider la commande</button>
+            </div>
+
+            <!-- Liste des commandes -->
+            <div id="myOrdersTab" class="tab-content hidden">
+                <h2>Mes commandes</h2>
+                <div id="ordersList">
+                    <!-- Les commandes seront chargées ici dynamiquement -->
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <p>Vous n'avez pas encore de commandes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 MARCIOLAB - Tous droits réservés</p>
+        </footer>
+    </div>
+     <script>
+    // Script JavaScript modifié
+document.addEventListener('DOMContentLoaded', function() {
+    // Configuration Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyBtLLiwaiiL7YiGeHzvjOg5YLM9UuvDYIc",
+        authDomain: "market-16526.firebaseapp.com",
+        databaseURL: "https://market-16526-default-rtdb.firebaseio.com",
+        projectId: "market-16526",
+        storageBucket: "market-16526.appspot.com",
+        messagingSenderId: "876393365468",
+        appId: "1:876393365468:web:beba1dc4ccfe4f4a385919",
+        measurementId: "G-93L8R8SWVK"
+    };
+
+    // Initialisation Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    
+    // Variables globales
+    let currentUserId = null;
+    
+    // Vérification de la session au chargement
+    checkSession();
+    
+    // Gestion de l'inscription
+    document.getElementById('registerBtn').addEventListener('click', registerUser);
+    document.getElementById('pageCount').addEventListener('input', calculatePrice);
+    document.getElementById('submitOrderBtn').addEventListener('click', submitOrder);
+    document.getElementById('homeOrderBtn').addEventListener('click', () => switchTab('order'));
+    
+    // Gestion des onglets
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabName = tab.getAttribute('data-tab');
+            switchTab(tabName);
+        });
+    });
+    
+    // Initialisation des écouteurs pour la méthode de livraison
+    document.getElementById('deliveryMethod').addEventListener('change', toggleDeliveryContactField);
+    
+    // Fonction pour afficher le champ de contact approprié
+    function toggleDeliveryContactField() {
+        const deliveryMethod = document.getElementById('deliveryMethod').value;
+        const contactField = document.getElementById('deliveryContactField');
+        const contactInput = document.getElementById('deliveryContact');
+        
+        if (deliveryMethod === 'whatsapp') {
+            contactInput.type = 'tel';
+            contactInput.placeholder = 'Votre numéro WhatsApp';
+            contactField.classList.remove('hidden');
+        } else if (deliveryMethod === 'email') {
+            contactInput.type = 'email';
+            contactInput.placeholder = 'Votre adresse email';
+            contactField.classList.remove('hidden');
+        } else {
+            contactField.classList.add('hidden');
+        }
+    }
+    
+    // Vérification de la session existante
+    function checkSession() {
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+            currentUserId = userId;
+            database.ref('users/' + userId).once('value')
+                .then(snapshot => {
+                    if (snapshot.exists()) {
+                        document.getElementById('registerForm').classList.add('hidden');
+                        document.getElementById('homePage').classList.remove('hidden');
+                        loadUserOrders();
+                    } else {
+                        localStorage.removeItem('userId');
+                    }
+                });
+        }
+    }
+    
+    // Inscription utilisateur
+    function registerUser() {
+        const lastName = document.getElementById('lastName').value;
+        const firstName = document.getElementById('firstName').value;
+        const userType = document.getElementById('userType').value;
+        const contact = document.getElementById('contact').value;
+
+        if (lastName && firstName && userType && contact) {
+            // Enregistrement dans Firebase
+            const userId = Date.now().toString();
+            database.ref('users/' + userId).set({
+                lastName,
+                firstName,
+                userType,
+                contact,
+                createdAt: firebase.database.ServerValue.TIMESTAMP
+            });
+
+            // Sauvegarde de l'ID utilisateur dans le localStorage
+            localStorage.setItem('userId', userId);
+            currentUserId = userId;
+
+            // Passage à la page d'accueil
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('homePage').classList.remove('hidden');
+        } else {
+            alert('Veuillez remplir tous les champs');
+        }
+    }
+
+    // Calcul du prix en fonction du nombre de pages
+    function calculatePrice() {
+        const pageCount = parseInt(document.getElementById('pageCount').value);
+        let price = 0;
+
+        if (pageCount >= 10 && pageCount <= 15) price = 500;
+        else if (pageCount >= 16 && pageCount <= 20) price = 1000;
+        else if (pageCount > 20 && pageCount <= 30) price = 2000;
+        else if (pageCount > 30 && pageCount <= 40) price = 3000;
+
+        document.getElementById('price').value = price + ' FCFA';
+    }
+
+    // Soumission d'une commande
+    function submitOrder() {
+        const theme = document.getElementById('theme').value;
+        const teacher = document.getElementById('teacher').value;
+        const participants = document.getElementById('participants').value;
+        const pageCount = document.getElementById('pageCount').value;
+        const price = document.getElementById('price').value;
+        const deliveryMethod = document.getElementById('deliveryMethod').value;
+        const deliveryContact = document.getElementById('deliveryContact').value;
+
+        if (!theme || !teacher || !participants || !pageCount) {
+            alert('Veuillez remplir tous les champs obligatoires');
+            return;
+        }
+
+        if (!deliveryMethod) {
+            alert('Veuillez sélectionner un mode de livraison');
+            return;
+        }
+
+        if (!deliveryContact) {
+            alert('Veuillez fournir vos coordonnées de livraison');
+            return;
+        }
+
+        // Valider le format selon le type
+        if (deliveryMethod === 'whatsapp' && !isValidPhoneNumber(deliveryContact)) {
+            alert('Veuillez entrer un numéro de téléphone valide');
+            return;
+        } else if (deliveryMethod === 'email' && !isValidEmail(deliveryContact)) {
+            alert('Veuillez entrer une adresse email valide');
+            return;
+        }
+
+        // Enregistrement de la commande
+        const orderId = Date.now().toString();
+        const orderData = {
+            theme,
+            teacher,
+            participants,
+            pageCount,
+            price,
+            status: 'En attente',
+            userId: currentUserId,
+            deliveryMethod,
+            deliveryContact,
+            createdAt: firebase.database.ServerValue.TIMESTAMP
+        };
+        
+        database.ref('orders/' + orderId).set(orderData);
+
+        // Message de remerciement avec mention du mode de livraison
+        const deliveryChannel = deliveryMethod === 'whatsapp' ? 'votre inbox WhatsApp' : 'votre email';
+        alert(`Merci pour votre commande ! Votre document sera livré dans ${deliveryChannel} dans les 24 heures.`);
+
+        // Redirection vers inside.html avec les données
+        redirectToInsidePage(orderData, orderId);
+    }
+
+    // Redirection vers inside.html avec les données
+    function redirectToInsidePage(orderData, orderId) {
+        // Convertir les données en query string
+        const params = new URLSearchParams();
+        for (const key in orderData) {
+            if (key !== 'createdAt') { // On exclut le timestamp Firebase
+                params.append(key, orderData[key]);
+            }
+        }
+        params.append('orderId', orderId);
+        
+        // Redirection vers inside.html avec les données
+        window.location.href = 'inside.html?' + params.toString();
+    }
+
+    // Validation d'un numéro de téléphone
+    function isValidPhoneNumber(phone) {
+        return /^(\+)?[0-9]{8,15}$/.test(phone);
+    }
+
+    // Validation d'une adresse email
+    function isValidEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+
+    // Chargement des commandes de l'utilisateur
+    function loadUserOrders() {
+        if (!currentUserId) return;
+        
+        const ordersRef = database.ref('orders');
+        ordersRef.orderByChild('userId').equalTo(currentUserId).on('value', snapshot => {
+            const ordersList = document.getElementById('ordersList');
+            ordersList.innerHTML = '';
+            
+            if (snapshot.exists()) {
+                let hasOrders = false;
+                
+                snapshot.forEach(childSnapshot => {
+                    hasOrders = true;
+                    const order = childSnapshot.val();
+                    const orderId = childSnapshot.key;
+                    
+                    const orderCard = createOrderCard(order, orderId);
+                    ordersList.appendChild(orderCard);
+                });
+                
+                if (!hasOrders) {
+                    showEmptyOrdersState();
+                }
+            } else {
+                showEmptyOrdersState();
+            }
+        });
+    }
+    
+    // Affichage de l'état vide pour les commandes
+    function showEmptyOrdersState() {
+        const ordersList = document.getElementById('ordersList');
+        ordersList.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <p>Vous n'avez pas encore de commandes</p>
+            </div>
+        `;
+    }
+    
+    // Création d'une carte de commande
+    function createOrderCard(order, orderId) {
+        const card = document.createElement('div');
+        card.className = 'command-card';
+        
+        let statusClass = '';
+        switch (order.status) {
+            case 'En attente':
+                statusClass = 'status-pending';
+                break;
+            case 'En cours':
+                statusClass = 'status-progress';
+                break;
+            case 'Terminé':
+                statusClass = 'status-completed';
+                break;
+        }
+        
+        // Formatage de la date
+        const orderDate = order.createdAt ? new Date(order.createdAt).toLocaleDateString('fr-FR') : 'Date inconnue';
+        
+        card.innerHTML = `
+            <div class="command-header">
+                <div class="command-title">${order.theme}</div>
+                <div class="command-status ${statusClass}">${order.status}</div>
+            </div>
+            <div class="command-content">
+                <div class="detail-item">
+                    <span class="detail-label">Professeur:</span>
+                    <span>${order.teacher}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Pages:</span>
+                    <span>${order.pageCount}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Prix:</span>
+                    <span>${order.price}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Date:</span>
+                    <span>${orderDate}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Livraison:</span>
+                    <span>${order.deliveryMethod === 'whatsapp' ? 'WhatsApp' : 'Email'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Contact:</span>
+                    <span>${order.deliveryContact}</span>
+                </div>
+            </div>
+        `;
+        
+        return card;
+    }
+    
+    // Navigation entre les onglets
+    function switchTab(tabName) {
+        // Masque tous les contenus d'onglets
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+        
+        // Désactive tous les onglets
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Active l'onglet sélectionné
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        
+        // Affiche le contenu de l'onglet sélectionné
+        const tabContentId = tabName + 'Tab';
+        document.getElementById(tabContentId).classList.remove('hidden');
+        
+        // Si c'est l'onglet des commandes, recharge les commandes
+        if (tabName === 'my-orders') {
+            loadUserOrders();
+        }
+    }
+    
+    // Initialiser l'affichage du champ de contact au chargement
+    toggleDeliveryContactField();
+});
+</script>
+</body>
+     </html>

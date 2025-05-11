@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALLs - Détails des commandes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <style>
+        :root {
+            --primary-color: #3a5bb7;
+            --primary-dark: #2a4494;
+            --primary-light: #5c7bd3;
+            --secondary-color: #4f67c1;
+            --accent-color: #3d84de;
+            --success-color: #34b197;
+            --warning-color: #e05f6e;
+            --light-bg: #f8f9fd;
+            --light-gray: #f1f3f9;
+            --mid-gray: #e0e5f2;
+            --dark-bg: #1a2130;
+            --text-color: #364156;
+            --text-muted: #67758d;
+            --light-text: #f8faff;
+            --border-radius-sm: 6px;
+            --border-radius: 10px;
+            --border-radius-lg: 16px;
+            --box-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --box-shadow: 0 8px 20px rgba(58, 91, 183, 0.12);
+            --box-shadow-lg: 0 12px 28px rgba(58, 91, 183, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .topbar {
+            background-color: white;
+            box-shadow: var(--box-shadow-sm);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .brand img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 8px;
+        }
+
+        .brand h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--mid-gray);
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .nav-btn i {
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--light-gray);
+            border-color: var(--text-muted);
+        }
+
+        .nav-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .order-header {
+            background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px 0;
+            position: relative;
+            margin-bottom: 40px;
+            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+            overflow: hidden;
+        }
+
+        .order-header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .order-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+
+        .main-content {
+            margin-bottom: 60px;
+        }
+
+        .order-detail {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+        }
+
+        .order-detail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .detail-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .detail-status {
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: #fff8e6;
+            color: #b78105;
+        }
+
+        .status-progress {
+            background-color: #e6f4ff;
+            color: #0771c2;
+        }
+
+        .status-completed {
+            background-color: #e6fff0;
+            color: #05a660;
+        }
+
+        .detail-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+
+        .detail-col {
+            flex: 1;
+            min-width: 250px;
+            padding: 0 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            margin-bottom: 20px;
+        }
+
+        .detail-item-label {
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .detail-item-label i {
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+
+        .detail-item-value {
+            color: var(--text-color);
+            font-size: 1.05rem;
+            word-break: break-word;
+        }
+
+        .order-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .order-btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .order-btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--light-gray);
+        }
+
+        .participants-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .participants-list li {
+            margin-bottom: 5px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .participants-list li::before {
+            content: '•';
+            color: var(--primary-color);
+            position: absolute;
+            left: 0;
+        }
+
+        .order-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        .go-back-btn {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .go-back-btn i {
+            margin-right: 8px;
+        }
+
+        .go-back-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .empty-state {
+            padding: 60px 40px;
+            text-align: center;
+            color: var(--text-muted);
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--mid-gray);
+            margin-bottom: 20px;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        .orders-list {
+            margin-top: 30px;
+        }
+
+        .order-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--box-shadow-sm);
+            transition: var(--transition);
+            border-left: 4px solid var(--primary-color);
+            cursor: pointer;
+        }
+
+        .order-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .order-card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .order-card-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .order-card-date {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .order-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .order-card-price {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            background-color: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            color: var(--text-muted);
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tab i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .tab.active {
+            background-color: white;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            font-weight: 600;
+        }
+
+        .tab:hover:not(.active) {
+            background-color: var(--light-gray);
+        }
+
+        footer {
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .order-header {
+                padding: 30px 0;
+            }
+
+            .order-header h1 {
+                font-size: 2rem;
+            }
+
+            .detail-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .detail-status {
+                align-self: flex-start;
+            }
+
+            .order-actions {
+                flex-direction: column;
+            }
+
+            .order-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-buttons {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="container">
+            <div class="topbar-content">
+                <a href="index.html" class="brand">
+                    <img src="image/marciolab.jpg" alt="ALLs Logo">
+                    <h1>MARCIOLAB</h1>
+                </a>
+                <div class="nav-buttons">
+                    <a href="#" class="nav-btn"><i class="fas fa-info-circle"></i> À propos</a>
+                    <a href="#" class="nav-btn"><i class="fas fa-envelope"></i> Contact</a>
+                    <a href="#" class="nav-btn"><i class="fas fa-laptop-code"></i> Maciolab</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="order-header">
+            <div class="order-header-content">
+                <h1>Gestion des commandes</h1>
+                <p>Suivez l'état de vos commandes de TPE et consultez leurs détails</p>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="order-navigation">
+                <a href="index.html" class="go-back-btn"><i class="fas fa-arrow-left"></i> Retour à l'accueil</a>
+                <a href="#" class="go-back-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> Actualiser</a>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab active" data-tab="all"><i class="fas fa-th-list"></i> Toutes les commandes</div>
+                <div class="tab" data-tab="pending"><i class="fas fa-clock"></i> En attente</div>
+                <div class="tab" data-tab="progress"><i class="fas fa-spinner"></i> En cours</div>
+                <div class="tab" data-tab="completed"><i class="fas fa-check-circle"></i> Terminées</div>
+            </div>
+
+            <!-- Conteneur pour afficher les détails d'une commande spécifique -->
+            <div id="orderDetailView" class="hidden">
+                <div class="order-detail">
+                    <div class="detail-header">
+                        <h2 class="detail-title" id="orderTheme">Chargement...</h2>
+                        <div class="detail-status status-pending" id="orderStatus">En attente</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-col">
+                            <div class="detail-item">
+                                <div class="detail-item-label"><i class="fas fa-hashtag"></i> ID de commande</div>
+                                <div class="detail-item-value" id="orderId">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-item-label"><i class="fas fa-chalkboard-teacher"></i> Professeur</div>
+                                <div class="detail-item-value" id="orderTeacher">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-item-label"><i class="fas fa-users"></i> Participants</div>
+                                <div class="detail-item-value">
+                                    <ul class="participants-list" id="orderParticipants">
+                                        <!-- Liste des participants -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-col">
+                            <div class="detail-item">
+                                <div class="detail-item-label"><i class="fas fa-file-alt"></i> Nombre de pages</div>
+                                <div class="detail-item-value" id="orderPageCount">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-item-label"><i class="fas fa-tag"></i> Prix</div>
+                                <div class="detail-item-value" id="orderPrice">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-item-label"><i class="fas fa-calendar-alt"></i> Date de commande</div>
+                                <div class="detail-item-value" id="orderDate">--</div>
+                            </div>
+                        </div>
+                        <div class="detail-col">
+                            <div class="detail-item">
+                                <div class="detail-item-label"><i class="fas fa-truck"></i> Mode de livraison</div>
+                                <div class="detail-item-value" id="orderDeliveryMethod">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-item-label"><i class="fas fa-exchange-alt"></i> Contact</div>
+                                <div class="detail-item-value" id="orderDeliveryContact">--</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        <button class="order-btn btn-primary" id="backToListBtn"><i class="fas fa-arrow-left"></i> Retour à la liste</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteneur pour la liste des commandes -->
+            <div id="ordersListView">
+                <div id="emptyState" class="empty-state hidden">
+                    <i class="fas fa-folder-open"></i>
+                    <p>Aucune commande trouvée</p>
+                </div>
+                <div id="ordersList" class="orders-list">
+                    <!-- Les commandes seront chargées ici dynamiquement -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ALLs - Tous droits réservés</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuration Firebase
+            const firebaseConfig = {
+                apiKey: "AIzaSyBtLLiwaiiL7YiGeHzvjOg5YLM9UuvDYIc",
+                authDomain: "market-16526.firebaseapp.com",
+                databaseURL: "https://market-16526-default-rtdb.firebaseio.com",
+                projectId: "market-16526",
+                storageBucket: "market-16526.appspot.com",
+                messagingSenderId: "876393365468",
+                appId: "1:876393365468:web:beba1dc4ccfe4f4a385919",
+                measurementId: "G-93L8R8SWVK"
+            };
+
+            // Initialisation Firebase
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+
+            // Variables globales
+            let currentUserId = localStorage.getItem('userId');
+            let currentTab = 'all';
+            let allOrders = [];
+
+            // Vérification si l'utilisateur est connecté
+            if (!currentUserId) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Récupération des paramètres de l'URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('orderId');
+            
+            // Si un ID de commande est présent dans l'URL, afficher les détails de cette commande
+            if (orderId) {
+                loadOrderDetails(orderId);
+            } else {
+                // Sinon, charger la liste des commandes
+                loadOrders();
+            }
+
+            // Gestion des onglets
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+
+            // Bouton de retour à la liste
+            document.getElementById('backToListBtn').addEventListener('click', function() {
+                document.getElementById('orderDetailView').classList.add('hidden');
+                document.getElementById('ordersListView').classList.remove('hidden');
+                // Nettoyer l'URL
+                history.pushState({}, document.title, window.location.pathname);
+            });
+
+            // Bouton d'actualisation
+            document.getElementById('refreshBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (document.getElementById('orderDetailView').classList.contains('hidden')) {
+                    loadOrders();
+                } else {
+                    const currentOrderId = document.getElementById('orderId').textContent;
+                    if (currentOrderId && currentOrderId !== '--') {
+                        loadOrderDetails(currentOrderId);
+                    }
+                }
+            });
+
+            // Chargement des commandes
+            function loadOrders() {
+                if (!currentUserId) return;
+
+                const ordersRef = database.ref('orders');
+                ordersRef.orderByChild('userId').equalTo(currentUserId).once('value')
+                    .then(snapshot => {
+                        allOrders = [];
+                        if (snapshot.exists()) {
+                            snapshot.forEach(childSnapshot => {
+                                const order = childSnapshot.val();
+                                order.id = childSnapshot.key;
+                                allOrders.push(order);
+                            });
+                            
+                            // Tri par date (plus récent en premier)
+                            allOrders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                            
+                            // Afficher les commandes selon l'onglet actif
+                            filterOrders(currentTab);
+                        } else {
+                            showEmptyState();
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erreur lors du chargement des commandes:", error);
+                        showEmptyState();
+                    });
+            }
+
+            // Filtrer les commandes selon l'onglet
+            function filterOrders(tab) {
+                let filteredOrders = [];
+                
+                switch(tab) {
+                    case 'pending':
+                        filteredOrders = allOrders.filter(order => order.status === 'En attente');
+                        break;
+                    case 'progress':
+                        filteredOrders = allOrders.filter(order => order.status === 'En cours');
+                        break;
+                    case 'completed':
+                        filteredOrders = allOrders.filter(order => order.status === 'Terminé');
+                        break;
+                    default:
+                        filteredOrders = allOrders;
+                }
+                
+                // Afficher les commandes filtrées
+                displayOrders(filteredOrders);
+            }
+
+            // Afficher les commandes dans la liste
+            function displayOrders(orders) {
+                const ordersList = document.getElementById('ordersList');
+                ordersList.innerHTML = '';
+                
+                if (orders.length === 0) {
+                    showEmptyState();
+                    return;
+                }
+                
+                hideEmptyState();
+                
+                orders.forEach(order => {
+                    const orderCard = createOrderCard(order);
+                    ordersList.appendChild(orderCard);
+                });
+            }
+
+            // Créer une carte de commande pour l'affichage dans la liste
+            function createOrderCard(order) {
+                const card = document.createElement('div');
+                card.className = 'order-card';
+                card.setAttribute('data-id', order.id);
+                
+                // Formatter la date
+                const orderDate = order.createdAt 
+                    ? new Date(order.createdAt).toLocaleDateString('fr-FR') 
+                    : 'Date inconnue';
+                
+                card.innerHTML = `
+                    <div class="order-card-header">
+                        <div class="order-card-title">${order.theme || 'Sans titre'}</div>
+                        <div class="order-card-date">${orderDate}</div>
+                    </div>
+                    <div class="order-card-content">
+                        <div>Professeur: ${order.teacher || '--'}</div>
+                        <div>Pages: ${order.pageCount || '--'}</div>
+                    </div>
+                    <div class="order-card-footer">
+                        <div class="order-card-price">${order.price || '--'}</div>
+                        <div class="detail-status ${getStatusClass(order.status)}">${order.status || 'En attente'}</div>
+                    </div>
+                `;
+                
+                // Ajouter un événement de clic pour afficher les détails
+                card.addEventListener('click', () => {
+                    loadOrderDetails(order.id);
+                });
+                
+                return card;
+            }
+
+            // Obtenir la classe CSS pour le statut
+            function getStatusClass(status) {
+                switch(status) {
+                    case 'En cours': return 'status-progress';
+                    case 'Terminé': return 'status-completed';
+                    default: return 'status-pending';
+                }
+            }
+
+            // Charger les détails d'une commande
+            function loadOrderDetails(orderId) {
+                database.ref('orders/' + orderId).once('value')
+                    .then(snapshot => {
+                        if (snapshot.exists()) {
+                            const order = snapshot.val();
+                            order.id = snapshot.key;
+                            
+                            // Afficher les détails de la commande
+                            displayOrderDetails(order);
+                            
+                            // Ajouter l'ID à l'URL pour permettre le partage direct
+                            history.pushState({}, document.title, `${window.location.pathname}?orderId=${orderId}`);
+                        } else {
+                            alert('Commande non trouvée');
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erreur lors du chargement des détails:", error);
+                        alert('Erreur lors du chargement des détails de la commande');
+                    });
+            }
+
+            // Afficher les détails d'une commande
+            function displayOrderDetails(order) {
+                document.getElementById('orderTheme').textContent = order.theme || 'Sans titre';
+                document.getElementById('orderId').textContent = order.id;
+                document.getElementById('orderTeacher').textContent = order.teacher || '--';
+                document.getElementById('orderPageCount').textContent = order.pageCount || '--';
+                document.getElementById('orderPrice').textContent = order.price || '--';
+                document.getElementById('orderDeliveryMethod').textContent = (order.deliveryMethod === 'whatsapp') ? 'WhatsApp' : 'Email';
+                document.getElementById('orderDeliveryContact').textContent = order.deliveryContact || '--';
+                
+                // Formater et afficher la date
+                const orderDate = order.createdAt 
+                    ? new Date(order.createdAt).toLocaleDateString('fr-FR', { 
+                        day: 'numeric', 
+                        month: 'long', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                    : 'Date inconnue';
+                document.getElementById('orderDate').textContent = orderDate;
+                
+                // Afficher le statut avec la classe CSS appropriée
+                const statusElement = document.getElementById('orderStatus');
+                statusElement.textContent = order.status || 'En attente';
+                statusElement.className = `detail-status ${getStatusClass(order.status)}`;
+                
+                // Afficher les participants
+                const participantsList = document.getElementById('orderParticipants');
+                participantsList.innerHTML = '';
+                
+                if (order.participants) {
+    const participants = order.participants.split('\n');
+    participants.forEach(participant => {
+        if (participant.trim()) {
+            const li = document.createElement('li');
+            li.textContent = participant.trim();
+            participantsList.appendChild(li);
+        }
+    });
+} else {
+    const li = document.createElement('li');
+    li.textContent = 'Aucun participant';
+    participantsList.appendChild(li);
+}
+
+// Afficher la vue détaillée et masquer la liste
+document.getElementById('orderDetailView').classList.remove('hidden');
+document.getElementById('ordersListView').classList.add('hidden');
+}
+
+            // Changer d'onglet
+            function switchTab(tab) {
+                // Mettre à jour l'onglet actif dans l'interface
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+                
+                // Mettre à jour l'onglet actuel et filtrer les commandes
+                currentTab = tab;
+                filterOrders(tab);
+            }
+
+            // Afficher l'état vide (aucune commande)
+            function showEmptyState() {
+                document.getElementById('emptyState').classList.remove('hidden');
+                document.getElementById('ordersList').classList.add('hidden');
+            }
+
+            // Masquer l'état vide
+            function hideEmptyState() {
+                document.getElementById('emptyState').classList.add('hidden');
+                document.getElementById('ordersList').classList.remove('hidden');
+            }
+
+            // Fonction utilitaire pour formater les dates
+            function formatDate(timestamp) {
+                if (!timestamp) return 'Date inconnue';
+                
+                const date = new Date(timestamp);
+                const options = { 
+                    day: 'numeric', 
+                    month: 'long', 
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                
+                return date.toLocaleDateString('fr-FR', options);
+            }
+
+            // Fonction pour déconnexion
+            function logout() {
+                localStorage.removeItem('userId');
+                localStorage.removeItem('userEmail');
+                window.location.href = 'index.html';
+            }
+
+            // Écouteur d'événements en temps réel pour les mises à jour des commandes
+            function setupRealtimeUpdates() {
+                if (!currentUserId) return;
+                
+                const ordersRef = database.ref('orders');
+                ordersRef.orderByChild('userId').equalTo(currentUserId).on('child_changed', snapshot => {
+                    const updatedOrder = snapshot.val();
+                    updatedOrder.id = snapshot.key;
+                    
+                    // Mettre à jour la commande dans notre tableau local
+                    const index = allOrders.findIndex(order => order.id === updatedOrder.id);
+                    if (index !== -1) {
+                        allOrders[index] = updatedOrder;
+                        
+                        // Si on est actuellement sur la vue détaillée de cette commande, mettre à jour l'affichage
+                        const currentOrderId = document.getElementById('orderId').textContent;
+                        if (!document.getElementById('orderDetailView').classList.contains('hidden') && 
+                            currentOrderId === updatedOrder.id) {
+                            displayOrderDetails(updatedOrder);
+                        }
+                        
+                        // Mettre à jour la liste des commandes
+                        filterOrders(currentTab);
+                    }
+                });
+                
+                // Écouter les nouvelles commandes
+                ordersRef.orderByChild('userId').equalTo(currentUserId).on('child_added', snapshot => {
+                    const newOrder = snapshot.val();
+                    newOrder.id = snapshot.key;
+                    
+                    // Vérifier si cette commande existe déjà dans notre tableau
+                    const exists = allOrders.some(order => order.id === newOrder.id);
+                    if (!exists) {
+                        allOrders.push(newOrder);
+                        // Tri par date (plus récent en premier)
+                        allOrders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                        // Mettre à jour la liste des commandes
+                        filterOrders(currentTab);
+                    }
+                });
+                
+                // Écouter les suppressions de commandes
+                ordersRef.orderByChild('userId').equalTo(currentUserId).on('child_removed', snapshot => {
+                    const removedOrderId = snapshot.key;
+                    
+                    // Retirer la commande de notre tableau local
+                    allOrders = allOrders.filter(order => order.id !== removedOrderId);
+                    
+                    // Si on est sur la vue détaillée de cette commande, revenir à la liste
+                    const currentOrderId = document.getElementById('orderId').textContent;
+                    if (!document.getElementById('orderDetailView').classList.contains('hidden') && 
+                        currentOrderId === removedOrderId) {
+                        document.getElementById('orderDetailView').classList.add('hidden');
+                        document.getElementById('ordersListView').classList.remove('hidden');
+                        history.pushState({}, document.title, window.location.pathname);
+                    }
+                    
+                    // Mettre à jour la liste des commandes
+                    filterOrders(currentTab);
+                });
+            }
+
+            // Ajout d'un bouton de déconnexion dans la navigation
+            function addLogoutButton() {
+                const navButtons = document.querySelector('.nav-buttons');
+                const logoutBtn = document.createElement('a');
+                logoutBtn.href = '#';
+                logoutBtn.className = 'nav-btn';
+                logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Déconnexion';
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+                navButtons.appendChild(logoutBtn);
+            }
+
+            // Initialisation de l'application
+            function init() {
+                addLogoutButton();
+                setupRealtimeUpdates();
+                
+                // Si un ID de commande est présent dans l'URL, afficher les détails de cette commande
+                if (orderId) {
+                    loadOrderDetails(orderId);
+                } else {
+                    // Sinon, charger toutes les commandes
+                    loadOrders();
+                }
+            }
+
+            // Démarrer l'application
+            init();
+        });
+    </script>
+</body>
+</html>
