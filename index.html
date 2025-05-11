@@ -857,8 +857,12 @@
                     <input type="text" id="theme" placeholder="Ex: Le changement climatique" required>
                 </div>
                 <div class="form-group">
-                    <label for="teacher"><i class="fas fa-chalkboard-teacher"></i> Nom du professeur et de L'Etablissement</label>
-                    <input type="text" id="teacher" placeholder="Ex: Prof:M. Dupont Etabl: Dercade" required>
+                    <label for="teacher"><i class="fas fa-chalkboard-teacher"></i> Nom du professeur</label>
+                    <input type="text" id="teacher" placeholder="Ex: M. Dupont" required>
+                </div>
+                <div class="form-group">
+                    <label for="establishment"><i class="fas fa-school"></i> Nom de l'établissement</label>
+                    <input type="text" id="establishment" placeholder="Ex: Lycée Dercade" required>
                 </div>
                 <div class="form-group">
                     <label for="participants"><i class="fas fa-users"></i> Noms des participants</label>
@@ -866,7 +870,7 @@
                 </div>
                 <div class="form-group">
                     <label for="pageCount"><i class="fas fa-file-alt"></i> Nombre de pages</label>
-                    <input type="number" id="pageCount" min="10" max="40" value="10" required>
+                    <input type="number" id="pageCount" min="10" max="40" value="" required>
                 </div>
                 <div class="form-group">
                     <label for="deliveryMethod"><i class="fas fa-truck"></i> Mode de livraison</label>
@@ -905,8 +909,7 @@
         </footer>
     </div>
      <script>
-    // Script JavaScript modifié
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     // Configuration Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyBtLLiwaiiL7YiGeHzvjOg5YLM9UuvDYIc",
@@ -1031,13 +1034,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function submitOrder() {
         const theme = document.getElementById('theme').value;
         const teacher = document.getElementById('teacher').value;
+        const establishment = document.getElementById('establishment').value;
         const participants = document.getElementById('participants').value;
         const pageCount = document.getElementById('pageCount').value;
         const price = document.getElementById('price').value;
         const deliveryMethod = document.getElementById('deliveryMethod').value;
         const deliveryContact = document.getElementById('deliveryContact').value;
 
-        if (!theme || !teacher || !participants || !pageCount) {
+        if (!theme || !teacher || !establishment || !participants || !pageCount) {
             alert('Veuillez remplir tous les champs obligatoires');
             return;
         }
@@ -1066,6 +1070,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const orderData = {
             theme,
             teacher,
+            establishment,
             participants,
             pageCount,
             price,
@@ -1081,24 +1086,24 @@ document.addEventListener('DOMContentLoaded', function() {
         // Message de remerciement avec mention du mode de livraison
         const deliveryChannel = deliveryMethod === 'whatsapp' ? 'votre inbox WhatsApp' : 'votre email';
         alert(`Merci pour votre commande ! Votre document sera livré dans ${deliveryChannel} dans les 24 heures.`);
-
-        // Redirection vers inside.html avec les données
-        redirectToInsidePage(orderData, orderId);
-    }
-
-    // Redirection vers inside.html avec les données
-    function redirectToInsidePage(orderData, orderId) {
-        // Convertir les données en query string
-        const params = new URLSearchParams();
-        for (const key in orderData) {
-            if (key !== 'createdAt') { // On exclut le timestamp Firebase
-                params.append(key, orderData[key]);
-            }
-        }
-        params.append('orderId', orderId);
         
-        // Redirection vers inside.html avec les données
-        window.location.href = 'inside.html?' + params.toString();
+        // Réinitialiser le formulaire
+        resetOrderForm();
+        
+        // Rester sur la même page, ne pas rediriger
+    }
+    
+    // Réinitialiser le formulaire de commande
+    function resetOrderForm() {
+        document.getElementById('theme').value = '';
+        document.getElementById('teacher').value = '';
+        document.getElementById('establishment').value = '';
+        document.getElementById('participants').value = '';
+        document.getElementById('pageCount').value = '10';
+        document.getElementById('deliveryMethod').value = '';
+        document.getElementById('deliveryContact').value = '';
+        document.getElementById('deliveryContactField').classList.add('hidden');
+        calculatePrice(); // Reset price to default
     }
 
     // Validation d'un numéro de téléphone
@@ -1183,6 +1188,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="detail-item">
                     <span class="detail-label">Professeur:</span>
                     <span>${order.teacher}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Établissement:</span>
+                    <span>${order.establishment || 'Non spécifié'}</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">Pages:</span>
