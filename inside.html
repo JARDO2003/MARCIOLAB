@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MARCIOLAB - Espace Admin</title>
+    <title>MARCIOLAB - Administration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
@@ -30,18 +30,21 @@
             --box-shadow: 0 8px 20px rgba(58, 91, 183, 0.12);
             --box-shadow-lg: 0 12px 28px rgba(58, 91, 183, 0.15);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, sans-serif;
         }
 
         body {
+            font-family: var(--font-body);
             background-color: var(--light-bg);
             color: var(--text-color);
+            line-height: 1.6;
         }
 
         .container {
@@ -50,14 +53,16 @@
             padding: 0 20px;
         }
 
-        header {
-            background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 20px 0;
-            box-shadow: var(--box-shadow);
+        .topbar {
+            background-color: white;
+            box-shadow: var(--box-shadow-sm);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .header-content {
+        .topbar-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -67,7 +72,7 @@
             display: flex;
             align-items: center;
             text-decoration: none;
-            color: white;
+            color: var(--text-color);
         }
 
         .brand img {
@@ -80,113 +85,226 @@
         .brand h1 {
             font-size: 1.5rem;
             margin: 0;
+            color: var(--primary-color);
         }
 
-        .admin-badge {
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+        .login-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+            max-width: 500px;
+            margin: 100px auto;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
             font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--mid-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(58, 91, 183, 0.1);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
         }
 
         .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-            margin-top: 30px;
+            padding: 30px 0;
         }
 
-        .stats-container {
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+        }
+
+        .card {
             background-color: white;
             border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
             padding: 20px;
-            box-shadow: var(--box-shadow-sm);
-        }
-
-        .stats-title {
-            font-size: 1.2rem;
-            color: var(--primary-color);
             margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
             display: flex;
             align-items: center;
         }
 
-        .stats-title i {
+        .filter-label {
             margin-right: 10px;
-        }
-
-        .stat-card {
-            background-color: var(--light-gray);
-            border-radius: var(--border-radius);
-            padding: 15px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .stat-label {
+            font-weight: 500;
             color: var(--text-muted);
-            font-size: 0.9rem;
         }
 
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            background-color: rgba(58, 91, 183, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-color);
-            font-size: 1.4rem;
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--mid-gray);
+            border-radius: var(--border-radius);
+            background-color: white;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            padding-left: 40px;
+            background-color: white;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
         }
 
         .order-list {
-            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
         }
 
         .order-card {
             background-color: white;
             border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 15px;
             box-shadow: var(--box-shadow-sm);
-            border-left: 4px solid var(--primary-color);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid var(--light-gray);
+        }
+
+        .order-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--box-shadow);
         }
 
         .order-header {
+            padding: 15px;
+            border-bottom: 1px solid var(--light-gray);
+            background-color: var(--light-gray);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .order-id {
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 0.9rem;
         }
 
         .order-title {
             font-weight: 600;
             color: var(--primary-color);
             font-size: 1.1rem;
+            margin-bottom: 5px;
         }
 
-        .order-id {
-            font-size: 0.8rem;
+        .order-content {
+            padding: 15px;
+        }
+
+        .order-details {
+            margin-bottom: 15px;
+        }
+
+        .order-detail {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: var(--text-muted);
+            min-width: 120px;
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .order-footer {
+            background-color: var(--light-gray);
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-date {
+            font-size: 0.85rem;
             color: var(--text-muted);
         }
 
-        .order-status {
-            padding: 5px 12px;
-            border-radius: 30px;
+        .status-tag {
+            padding: 4px 10px;
+            border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 500;
         }
@@ -206,50 +324,20 @@
             color: #05a660;
         }
 
-        .order-details {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-
-        .detail-item {
-            margin-bottom: 5px;
-        }
-
-        .detail-label {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            display: block;
-            margin-bottom: 3px;
-        }
-
-        .detail-value {
-            font-weight: 500;
-        }
-
-        .order-actions {
+        .action-buttons {
             display: flex;
             gap: 10px;
             margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--light-gray);
         }
 
-        .btn {
-            padding: 8px 16px;
-            border-radius: var(--border-radius);
+        .action-btn {
+            flex: 1;
+            padding: 8px;
             font-size: 0.9rem;
-            font-weight: 500;
+            text-align: center;
+            border-radius: var(--border-radius);
             cursor: pointer;
             transition: var(--transition);
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn i {
-            margin-right: 6px;
         }
 
         .btn-primary {
@@ -268,17 +356,7 @@
         }
 
         .btn-outline:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .btn-success {
-            background-color: var(--success-color);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #2a9a83;
+            background-color: var(--light-gray);
         }
 
         .btn-warning {
@@ -287,121 +365,197 @@
         }
 
         .btn-warning:hover {
-            background-color: #c94d5c;
+            background-color: #cc5461;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #2c9781;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            box-shadow: var(--box-shadow-lg);
+            position: relative;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--text-color);
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
         }
 
         .empty-state {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 40px;
             text-align: center;
+            padding: 50px 0;
             color: var(--text-muted);
         }
 
         .empty-state i {
             font-size: 3rem;
-            color: var(--mid-gray);
             margin-bottom: 15px;
+            color: var(--mid-gray);
         }
 
-        .filter-bar {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .filter-btn {
-            padding: 8px 16px;
-            background-color: white;
-            border: 1px solid var(--mid-gray);
-            border-radius: 30px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .filter-btn.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        .filter-btn:hover:not(.active) {
-            background-color: var(--light-gray);
+        .empty-state p {
+            font-size: 1.1rem;
         }
 
         @media (max-width: 768px) {
-            .dashboard {
+            .filters {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .filter-item {
+                width: 100%;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+            
+            .order-list {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <header>
+    <div class="topbar">
         <div class="container">
-            <div class="header-content">
+            <div class="topbar-content">
                 <a href="#" class="brand">
                     <img src="image/marciolab.jpg" alt="MARCIOLAB Logo">
                     <h1>MARCIOLAB</h1>
                 </a>
-                <div class="admin-badge">
-                    <i class="fas fa-shield-alt"></i> Espace Administration
+                <div id="logoutBtn" style="display: none;">
+                    <button><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
 
     <div class="container">
-        <div class="dashboard">
-            <div>
-                <div class="stats-container">
-                    <h2 class="stats-title"><i class="fas fa-chart-pie"></i> Statistiques</h2>
-                    <div class="stat-card">
-                        <div>
-                            <div class="stat-value" id="totalOrders">0</div>
-                            <div class="stat-label">Commandes totales</div>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div>
-                            <div class="stat-value" id="pendingOrders">0</div>
-                            <div class="stat-label">En attente</div>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div>
-                            <div class="stat-value" id="completedOrders">0</div>
-                            <div class="stat-label">Terminées</div>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                    </div>
-                </div>
+        <!-- Page de connexion -->
+        <div id="loginPage" class="login-container">
+            <h2>Accès Administration</h2>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" placeholder="Entrez le mot de passe">
+            </div>
+            <button id="loginBtn">Se connecter</button>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard" style="display: none;">
+            <div class="header">
+                <h2>Tableau de bord</h2>
+                <p>Gestion des commandes de TPE</p>
             </div>
 
-            <div>
-                <div class="filter-bar">
-                    <button class="filter-btn active" data-filter="all">Toutes</button>
-                    <button class="filter-btn" data-filter="pending">En attente</button>
-                    <button class="filter-btn" data-filter="progress">En cours</button>
-                    <button class="filter-btn" data-filter="completed">Terminées</button>
-                </div>
-
-                <div class="order-list" id="ordersList">
-                    <!-- Les commandes seront chargées ici dynamiquement -->
-                    <div class="empty-state" id="emptyState">
-                        <i class="fas fa-folder-open"></i>
-                        <p>Aucune commande trouvée</p>
+            <div class="card">
+                <div class="filters">
+                    <div class="filter-item">
+                        <span class="filter-label">Statut:</span>
+                        <select id="statusFilter" class="filter-select">
+                            <option value="all">Tous</option>
+                            <option value="En attente">En attente</option>
+                            <option value="En cours">En cours</option>
+                            <option value="Terminé">Terminé</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <span class="filter-label">Livraison:</span>
+                        <select id="deliveryFilter" class="filter-select">
+                            <option value="all">Tous</option>
+                            <option value="whatsapp">WhatsApp</option>
+                            <option value="email">Email</option>
+                        </select>
                     </div>
                 </div>
+
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Rechercher une commande...">
+                </div>
+
+                <div id="orderList" class="order-list">
+                    <!-- Les commandes seront chargées ici dynamiquement -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour modifier le statut -->
+    <div id="statusModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Modifier le statut</h3>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="orderStatus">Nouveau statut</label>
+                    <select id="orderStatus" class="filter-select">
+                        <option value="En attente">En attente</option>
+                        <option value="En cours">En cours</option>
+                        <option value="Terminé">Terminé</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline modal-close-btn">Annuler</button>
+                <button id="updateStatusBtn" class="btn-primary">Mettre à jour</button>
             </div>
         </div>
     </div>
@@ -424,256 +578,286 @@
             firebase.initializeApp(firebaseConfig);
             const database = firebase.database();
             
-            // Vérifier si on a des paramètres d'URL pour une nouvelle commande
-            const urlParams = new URLSearchParams(window.location.search);
+            // Variables
+            let orders = [];
+            let currentOrderId = null;
+            const ADMIN_PASSWORD = 'marcio123456';
+
+            // Vérifier si déjà connecté
+            checkAuthentication();
             
-            // Si on a un ID de commande dans l'URL, on récupère les détails
-            if(urlParams.has('orderId')) {
-                const orderId = urlParams.get('orderId');
-                const orderData = {
-                    theme: urlParams.get('theme') || '',
-                    teacher: urlParams.get('teacher') || '',
-                    participants: urlParams.get('participants') || '',
-                    pageCount: urlParams.get('pageCount') || '',
-                    price: urlParams.get('price') || '',
-                    status: urlParams.get('status') || 'En attente',
-                    userId: urlParams.get('userId') || '',
-                    deliveryMethod: urlParams.get('deliveryMethod') || '',
-                    deliveryContact: urlParams.get('deliveryContact') || '',
-                    createdAt: Date.now()
-                };
-                
-                // Stocker l'ID de commande et les données dans le localStorage
-                saveOrderToLocalStorage(orderId, orderData);
-            }
+            // Événements
+            document.getElementById('loginBtn').addEventListener('click', login);
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            document.getElementById('statusFilter').addEventListener('change', filterOrders);
+            document.getElementById('deliveryFilter').addEventListener('change', filterOrders);
+            document.getElementById('searchInput').addEventListener('input', filterOrders);
+            document.getElementById('updateStatusBtn').addEventListener('click', updateOrderStatus);
             
-            // Chargement des commandes depuis localStorage et Firebase
-            loadAllOrders();
-            
-            // Ajout des écouteurs pour les filtres
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            filterButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Retirer la classe active de tous les boutons
-                    filterButtons.forEach(b => b.classList.remove('active'));
-                    // Ajouter la classe active au bouton cliqué
-                    this.classList.add('active');
-                    // Appliquer le filtre
-                    const filterValue = this.getAttribute('data-filter');
-                    filterOrders(filterValue);
+            // Fermeture du modal
+            document.querySelectorAll('.modal-close, .modal-close-btn').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.getElementById('statusModal').style.display = 'none';
                 });
             });
-            
-            // Fonction pour sauvegarder une commande dans le localStorage
-            function saveOrderToLocalStorage(orderId, orderData) {
-                // Récupérer les commandes existantes
-                let orders = JSON.parse(localStorage.getItem('marciolabOrders')) || {};
-                // Ajouter la nouvelle commande
-                orders[orderId] = orderData;
-                // Sauvegarder dans le localStorage
-                localStorage.setItem('marciolabOrders', JSON.stringify(orders));
-            }
-            
-            // Fonction pour charger toutes les commandes
-            function loadAllOrders() {
-                // Récupérer les commandes du localStorage
-                const localOrders = JSON.parse(localStorage.getItem('marciolabOrders')) || {};
-                
-                // Préparer le conteneur
-                const ordersList = document.getElementById('ordersList');
-                ordersList.innerHTML = '';
-                
-                // Statistiques
-                let totalOrders = 0;
-                let pendingOrders = 0;
-                let completedOrders = 0;
-                
-                // Vérifier si on a des commandes
-                if (Object.keys(localOrders).length > 0) {
-                    document.getElementById('emptyState').style.display = 'none';
-                    
-                    // Boucler sur les commandes
-                    for (const [orderId, order] of Object.entries(localOrders)) {
-                        totalOrders++;
-                        
-                        if (order.status === 'En attente') {
-                            pendingOrders++;
-                        } else if (order.status === 'Terminé') {
-                            completedOrders++;
-                        }
-                        
-                        // Créer une carte pour chaque commande
-                        const orderCard = createOrderCard(orderId, order);
-                        ordersList.appendChild(orderCard);
-                    }
+
+            // Vérifier authentification
+            function checkAuthentication() {
+                const isAuthenticated = sessionStorage.getItem('authenticated') === 'true';
+                if (isAuthenticated) {
+                    showDashboard();
+                    loadOrders();
                 } else {
-                    document.getElementById('emptyState').style.display = 'block';
-                }
-                
-                // Mettre à jour les statistiques
-                document.getElementById('totalOrders').textContent = totalOrders;
-                document.getElementById('pendingOrders').textContent = pendingOrders;
-                document.getElementById('completedOrders').textContent = completedOrders;
-                
-                // Charger aussi depuis Firebase (si disponible)
-                database.ref('orders').once('value')
-                    .then(snapshot => {
-                        if (snapshot.exists()) {
-                            snapshot.forEach(childSnapshot => {
-                                const orderId = childSnapshot.key;
-                                const order = childSnapshot.val();
-                                
-                                // Vérifier si cette commande n'est pas déjà dans le localStorage
-                                if (!localOrders[orderId]) {
-                                    totalOrders++;
-                                    
-                                    if (order.status === 'En attente') {
-                                        pendingOrders++;
-                                    } else if (order.status === 'Terminé') {
-                                        completedOrders++;
-                                    }
-                                    
-                                    // Créer une carte pour la commande
-                                    const orderCard = createOrderCard(orderId, order);
-                                    ordersList.appendChild(orderCard);
-                                    
-                                    // Cacher l'état vide
-                                    document.getElementById('emptyState').style.display = 'none';
-                                }
-                            });
-                            
-                            // Mettre à jour les statistiques
-                            document.getElementById('totalOrders').textContent = totalOrders;
-                            document.getElementById('pendingOrders').textContent = pendingOrders;
-                            document.getElementById('completedOrders').textContent = completedOrders;
+                    // Vérifier si l'URL contient les paramètres d'une nouvelle commande
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.has('theme')) {
+                        // Demander le mot de passe pour accéder directement à la page
+                        const password = prompt('Entrez le mot de passe pour accéder à la page:');
+                        if (password === ADMIN_PASSWORD) {
+                            sessionStorage.setItem('authenticated', 'true');
+                            showDashboard();
+                            loadOrders();
                         }
-                    });
+                    }
+                }
             }
-            
-            // Fonction pour créer une carte de commande
-            function createOrderCard(orderId, order) {
+
+            // Connexion
+            function login() {
+                const password = document.getElementById('password').value;
+                if (password === ADMIN_PASSWORD) {
+                    sessionStorage.setItem('authenticated', 'true');
+                    showDashboard();
+                    loadOrders();
+                } else {
+                    alert('Mot de passe incorrect');
+                }
+            }
+
+            // Déconnexion
+            function logout() {
+                sessionStorage.removeItem('authenticated');
+                document.getElementById('loginPage').style.display = 'block';
+                document.getElementById('dashboard').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'none';
+            }
+
+            // Afficher le dashboard
+            function showDashboard() {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('logoutBtn').style.display = 'block';
+            }
+
+            // Charger les commandes depuis Firebase
+            function loadOrders() {
+                const ordersRef = database.ref('orders');
+                ordersRef.on('value', snapshot => {
+                    orders = [];
+                    if (snapshot.exists()) {
+                        snapshot.forEach(childSnapshot => {
+                            const order = childSnapshot.val();
+                            order.id = childSnapshot.key;
+                            orders.push(order);
+                        });
+                        displayOrders(orders);
+                    } else {
+                        displayEmptyState();
+                    }
+                });
+            }
+
+            // Afficher les commandes
+            function displayOrders(ordersToDisplay) {
+                const orderList = document.getElementById('orderList');
+                orderList.innerHTML = '';
+
+                if (ordersToDisplay.length === 0) {
+                    displayEmptyState();
+                    return;
+                }
+
+                // Trier les commandes par date (plus récentes en premier)
+                ordersToDisplay.sort((a, b) => {
+                    return (b.createdAt || 0) - (a.createdAt || 0);
+                });
+
+                ordersToDisplay.forEach(order => {
+                    const orderCard = createOrderCard(order);
+                    orderList.appendChild(orderCard);
+                });
+            }
+
+            // Créer une carte de commande
+            function createOrderCard(order) {
                 const card = document.createElement('div');
                 card.className = 'order-card';
-                card.setAttribute('data-status', order.status.toLowerCase().replace(' ', '-'));
                 
-                // Déterminer la classe de statut
                 let statusClass = '';
                 switch (order.status) {
-                    case 'En attente':
-                        statusClass = 'status-pending';
-                        break;
-                    case 'En cours':
-                        statusClass = 'status-progress';
-                        break;
-                    case 'Terminé':
-                        statusClass = 'status-completed';
-                        break;
+                    case 'En attente': statusClass = 'status-pending'; break;
+                    case 'En cours': statusClass = 'status-progress'; break;
+                    case 'Terminé': statusClass = 'status-completed'; break;
                 }
                 
                 // Formatage de la date
-                const orderDate = order.createdAt ? new Date(order.createdAt).toLocaleDateString('fr-FR') : 'Date inconnue';
-                
+                const orderDate = order.createdAt 
+                    ? new Date(order.createdAt).toLocaleString('fr-FR') 
+                    : 'Date inconnue';
+
                 card.innerHTML = `
                     <div class="order-header">
-                        <div>
-                            <div class="order-title">${order.theme}</div>
-                            <div class="order-id">ID: ${orderId}</div>
-                        </div>
-                        <div class="order-status ${statusClass}">${order.status}</div>
+                        <span class="order-id">#${order.id.slice(-6)}</span>
+                        <span class="status-tag ${statusClass}">${order.status}</span>
                     </div>
-                    <div class="order-details">
-                        <div class="detail-item">
-                            <div class="detail-label">Professeur & Etablissement</div>
-                            <div class="detail-value">${order.teacher}</div>
+                    <div class="order-content">
+                        <div class="order-title">${order.theme}</div>
+                        <div class="order-details">
+                            <div class="order-detail">
+                                <span class="detail-label">Professeur:</span>
+                                <span class="detail-value">${order.teacher}</span>
+                            </div>
+                            <div class="order-detail">
+                                <span class="detail-label">Pages:</span>
+                                <span class="detail-value">${order.pageCount}</span>
+                            </div>
+                            <div class="order-detail">
+                                <span class="detail-label">Prix:</span>
+                                <span class="detail-value">${order.price}</span>
+                            </div>
+                            <div class="order-detail">
+                                <span class="detail-label">Livraison:</span>
+                                <span class="detail-value">${order.deliveryMethod === 'whatsapp' ? 'WhatsApp' : 'Email'}</span>
+                            </div>
+                            <div class="order-detail">
+                                <span class="detail-label">Contact:</span>
+                                <span class="detail-value">${order.deliveryContact}</span>
+                            </div>
+                            <div class="order-detail">
+                                <span class="detail-label">Participants:</span>
+                                <span class="detail-value">${order.participants}</span>
+                            </div>
                         </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Nombre de pages</div>
-                            <div class="detail-value">${order.pageCount}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Prix</div>
-                            <div class="detail-value">${order.price}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Date</div>
-                            <div class="detail-value">${orderDate}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Méthode de livraison</div>
-                            <div class="detail-value">${order.deliveryMethod === 'whatsapp' ? 'WhatsApp' : 'Email'}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Contact</div>
-                            <div class="detail-value">${order.deliveryContact}</div>
+                        <div class="action-buttons">
+                            <button class="action-btn btn-primary change-status-btn" data-id="${order.id}">
+                                <i class="fas fa-edit"></i> Modifier le statut
+                            </button>
+                            <button class="action-btn btn-warning delete-btn" data-id="${order.id}">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
                         </div>
                     </div>
-                    <div class="order-actions">
-                        <button class="btn btn-primary" onclick="updateStatus('${orderId}', 'En cours')">
-                            <i class="fas fa-play"></i> Démarrer
-                        </button>
-                        <button class="btn btn-success" onclick="updateStatus('${orderId}', 'Terminé')">
-                            <i class="fas fa-check"></i> Terminer
-                        </button>
-                        <button class="btn btn-warning" onclick="deleteOrder('${orderId}')">
-                            <i class="fas fa-trash"></i> Supprimer
-                        </button>
+                    <div class="order-footer">
+                        <span class="order-date">${orderDate}</span>
                     </div>
                 `;
                 
+                // Ajouter les événements sur les boutons
+                card.querySelector('.change-status-btn').addEventListener('click', function() {
+                    openStatusModal(order.id, order.status);
+                });
+                
+                card.querySelector('.delete-btn').addEventListener('click', function() {
+                    deleteOrder(order.id);
+                });
+                
                 return card;
             }
-            
-            // Fonction pour filtrer les commandes
-            window.filterOrders = function(status) {
-                const orderCards = document.querySelectorAll('.order-card');
+
+            // Afficher l'état vide
+            function displayEmptyState() {
+                const orderList = document.getElementById('orderList');
+                orderList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>Aucune commande disponible</p>
+                    </div>
+                `;
+            }
+
+            // Filtrer les commandes
+            function filterOrders() {
+                const statusFilter = document.getElementById('statusFilter').value;
+                const deliveryFilter = document.getElementById('deliveryFilter').value;
+                const searchInput = document.getElementById('searchInput').value.toLowerCase();
                 
-                orderCards.forEach(card => {
-                    if (status === 'all') {
-                        card.style.display = 'block';
-                    } else {
-                        const cardStatus = card.getAttribute('data-status');
-                        card.style.display = cardStatus === status ? 'block' : 'none';
+                let filteredOrders = orders.filter(order => {
+                    // Filtre de statut
+                    if (statusFilter !== 'all' && order.status !== statusFilter) {
+                        return false;
                     }
+                    
+                    // Filtre de méthode de livraison
+                    if (deliveryFilter !== 'all' && order.deliveryMethod !== deliveryFilter) {
+                        return false;
+                    }
+                    
+                    // Filtre de recherche
+                    if (searchInput) {
+                        return (
+                            (order.theme && order.theme.toLowerCase().includes(searchInput)) ||
+                            (order.teacher && order.teacher.toLowerCase().includes(searchInput)) ||
+                            (order.participants && order.participants.toLowerCase().includes(searchInput)) ||
+                            (order.deliveryContact && order.deliveryContact.toLowerCase().includes(searchInput)) ||
+                            (order.id && order.id.toLowerCase().includes(searchInput))
+                        );
+                    }
+                    
+                    return true;
                 });
-            };
-            
-            // Fonction pour mettre à jour le statut d'une commande
-            window.updateStatus = function(orderId, newStatus) {
-                // Mettre à jour dans le localStorage
-                const orders = JSON.parse(localStorage.getItem('marciolabOrders')) || {};
-                if (orders[orderId]) {
-                    orders[orderId].status = newStatus;
-                    localStorage.setItem('marciolabOrders', JSON.stringify(orders));
-                }
                 
-                // Mettre à jour dans Firebase
-                database.ref('orders/' + orderId).update({
+                displayOrders(filteredOrders);
+            }
+
+            // Ouvrir le modal de statut
+            function openStatusModal(orderId, currentStatus) {
+                currentOrderId = orderId;
+                document.getElementById('orderStatus').value = currentStatus;
+                document.getElementById('statusModal').style.display = 'block';
+            }
+
+            // Mettre à jour le statut de la commande
+            function updateOrderStatus() {
+                if (!currentOrderId) return;
+                
+                const newStatus = document.getElementById('orderStatus').value;
+                database.ref('orders/' + currentOrderId).update({
                     status: newStatus
-                }).catch(error => {
-                    console.error("Erreur lors de la mise à jour dans Firebase: ", error);
+                })
+                .then(() => {
+                    document.getElementById('statusModal').style.display = 'none';
+                    showNotification('Statut mis à jour avec succès');
+                })
+                .catch(error => {
+                    console.error('Erreur de mise à jour:', error);
+                    alert('Erreur lors de la mise à jour du statut');
                 });
-                
-                // Recharger la page pour refléter les changements
-                loadAllOrders();
-            };
-            
-            // Fonction pour supprimer une commande
-            window.deleteOrder = function(orderId) {
+            }
+
+            // Supprimer une commande
+            function deleteOrder(orderId) {
                 if (confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')) {
-                    // Supprimer du localStorage
-                    const orders = JSON.parse(localStorage.getItem('marciolabOrders')) || {};
-                    if (orders[orderId]) {
-                        delete orders[orderId];
-                        localStorage.setItem('marciolabOrders', JSON.stringify(orders));
-                    }
-                    
-                    // Supprimer de Firebase
-                    database.ref('orders/' + orderId).remove().catch(error => {
-                        console.error("Erreur lors de la suppression dans Firebase: ", error);
+                    database.ref('orders/' + orderId).remove()
+                    .then(() => {
+                        showNotification('Commande supprimée avec succès');
+                    })
+                    .catch(error => {
+                        console.error('Erreur de suppression:', error);
+                        alert('Erreur lors de la suppression de la commande');
                     });
-                    
-                    // Recharger la page pour refléter les changements
-                    loadAllOrders();
+                }
+            }
+
+            // Afficher une notification
+            function showNotification(message) {
+                alert(message); // Simple notification pour l'instant
+            }
+
+            // Fermer le modal si on clique en dehors
+            window.onclick = function(event) {
+                const modal = document.getElementById('statusModal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
                 }
             };
         });
